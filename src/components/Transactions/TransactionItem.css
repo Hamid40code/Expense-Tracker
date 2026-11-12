@@ -1,7 +1,3 @@
-/* =========================
-   TRANSACTION ITEM
-========================= */
-
 .transaction-item {
     display: flex;
     align-items: center;
@@ -14,15 +10,8 @@
     animation: transaction-in 0.3s ease;
 }
 
-.transaction-item:last-child {
-    border-bottom: none;
-}
-
-.transaction-item:hover {
-    background: rgba(11, 30, 72, 0.45);
-}
-
-/* Icon */
+.transaction-item:last-child { border-bottom: none; }
+.transaction-item:hover { background: rgba(11, 30, 72, 0.45); }
 
 .transaction-icon {
     display: flex;
@@ -54,11 +43,7 @@
     box-shadow: 0 0 14px rgba(0, 183, 76, 0.12);
 }
 
-.transaction-item:hover .transaction-icon {
-    transform: scale(1.05);
-}
-
-/* Information */
+.transaction-item:hover .transaction-icon { transform: scale(1.05); }
 
 .transaction-info {
     flex: 1;
@@ -69,20 +54,23 @@
     margin: 0;
     overflow: hidden;
     color: #f4f7ff;
-    font-size: 0.75rem;
-    font-weight: 550;
+    font-size: 0.8rem;
+    font-weight: 600;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .transaction-info p {
+    display: flex;
+    align-items: center;
+    gap: 3px;
     margin: 3px 0 0;
     color: #83a5d4;
-    font-size: 0.64rem;
+    font-size: 0.7rem;
     font-weight: 400;
 }
 
-/* Amount + delete */
+.transaction-info p time { white-space: nowrap; }
 
 .transaction-right {
     display: flex;
@@ -94,39 +82,29 @@
 .transaction-amount {
     color: #f4f7ff;
     font-family: var(--font-number);
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     font-weight: 600;
     white-space: nowrap;
 }
 
-.transaction-amount.income {
-    color: #20d477;
-}
-
-.transaction-amount.expense {
-    color: #f4f7ff;
-}
+.transaction-amount.income { color: #20d477; }
+.transaction-amount.expense { color: #f4f7ff; }
 
 .transaction-delete {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 23px;
-    height: 23px;
-    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
     color: #83abd4;
     background: transparent;
     border: none;
     border-radius: 7px;
     font-size: 1rem;
-    opacity: 0;
+    opacity: 1;
     cursor: pointer;
     transition: opacity 0.2s ease, background 0.2s ease, color 0.2s ease;
-}
-
-.transaction-item:hover .transaction-delete,
-.transaction-delete:focus-visible {
-    opacity: 1;
 }
 
 .transaction-delete:hover {
@@ -134,19 +112,26 @@
     background: rgba(245, 146, 24, 0.15);
 }
 
-/* Animation */
-
 @keyframes transaction-in {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsive */
+@media (hover: hover) and (pointer: fine) {
+    .transaction-delete { opacity: 0; }
+    .transaction-item:hover .transaction-delete,
+    .transaction-delete:focus-visible { opacity: 1; }
+}
+
+.transaction-delete:focus-visible {
+    outline: 2px solid #83abd4;
+    outline-offset: 3px;
+}
 
 @media (max-width: 500px) {
     .transaction-item {
         gap: 9px;
-        padding: 10px 2px;
+        padding: 8px 2px;
     }
 
     .transaction-icon {
@@ -156,41 +141,15 @@
     }
 
     .transaction-info h3 { font-size: 0.75rem; }
-    .transaction-info p { font-size: 0.64rem; }
-    .transaction-amount { font-size: 0.68rem; }
-
-    .transaction-delete {
-        width: 21px;
-        height: 21px;
-        opacity: 1;
-    }
-}
-
-/* Accessibility + reduced motion */
-
-.transaction-delete:focus-visible {
-    outline: 2px solid #83abd4;
-    outline-offset: 3px;
+    .transaction-info p { font-size: 12px; }
+    .transaction-amount { font-size: 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .transaction-item {
+    .transaction-item,
+    .transaction-icon,
+    .transaction-delete {
         animation: none;
         transition: none;
     }
-
-    .transaction-icon,
-    .transaction-delete {
-        transition: none;
-    }
-}
-
-.transaction-info p {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-}
-
-.transaction-info p time {
-    white-space: nowrap;
 }

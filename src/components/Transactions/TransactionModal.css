@@ -485,3 +485,10 @@
     color: #83a5d4;
     font-size: 0.7rem;
 }
+
+.transaction-form-error {
+  margin: -8px 0 0;
+  color: #f59218;
+  font-size: 0.78rem;
+  font-weight: 500;
+}

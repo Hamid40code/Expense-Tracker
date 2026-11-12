@@ -1,22 +1,53 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
+import { EXPENSE_CATEGORIES, getCategoryDefinition, INCOME_ICON } from "../../lib/categories.js";
 import "./TransactionModal.css";
 
-export default function TransactionModal({
-    onClose,
-    onAdd,
-}) {
+export default function TransactionModal({ onClose, onAdd, returnFocusRef }) {
     const [formData, setFormData] = useState({
         name: "",
         category: "Food",
         amount: "",
         type: "expense",
     });
+    const [formError, setFormError] = useState("");
+    const dialogRef = useRef(null);
 
     useEffect(() => {
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        dialogRef.current?.querySelector("#transaction-name")?.focus();
+
         function handleKeyDown(event) {
             if (event.key === "Escape") {
+                event.preventDefault();
                 onClose();
+                return;
+            }
+
+            if (event.key !== "Tab") return;
+
+            const focusable = dialogRef.current?.querySelectorAll(
+                'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+            );
+            const elements = Array.from(focusable || []);
+
+            if (elements.length === 0) {
+                event.preventDefault();
+                dialogRef.current?.focus();
+                return;
+            }
+
+            const first = elements[0];
+            const last = elements[elements.length - 1];
+            const activeElement = document.activeElement;
+
+            if (event.shiftKey && (activeElement === first || !dialogRef.current?.contains(activeElement))) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && (activeElement === last || !dialogRef.current?.contains(activeElement))) {
+                event.preventDefault();
+                first.focus();
             }
         }
 
@@ -24,29 +55,18 @@ export default function TransactionModal({
 
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
+            document.body.style.overflow = previousOverflow;
+            returnFocusRef?.current?.focus();
         };
-    }, [onClose]);
+    }, [onClose, returnFocusRef]);
 
     function handleChange(event) {
         const { name, value } = event.target;
-
         setFormData((previousData) => ({
             ...previousData,
             [name]: value,
         }));
-    }
-
-    function getCategoryIcon(category) {
-        const icons = {
-            Food: "🍔",
-            Shopping: "🛍️",
-            Transport: "🚘",
-            Entertainment: "🎮",
-            Bills: "📄",
-            Other: "💳",
-        };
-
-        return icons[category] || "💳";
+        if (formError) setFormError("");
     }
 
     function handleSubmit(event) {
@@ -55,24 +75,32 @@ export default function TransactionModal({
         const name = formData.name.trim();
         const amount = Number(formData.amount);
 
-        if (!name || !Number.isFinite(amount) || amount <= 0) {
+        if (!name) {
+            setFormError("Enter a name.");
+            dialogRef.current?.querySelector("#transaction-name")?.focus();
             return;
         }
 
+        if (!Number.isFinite(amount) || amount <= 0) {
+            setFormError("Enter an amount greater than 0.");
+            dialogRef.current?.querySelector("#transaction-amount")?.focus();
+            return;
+        }
+
+        const isIncome = formData.type === "income";
+        const category = isIncome ? null : formData.category;
         const transaction = {
             id: crypto.randomUUID(),
             name,
-            category: formData.category,
+            category,
             date: new Date().toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
                 year: "numeric",
             }),
-            // ISO timestamp gives the Recent Purchases section an exact
-            // creation time for reliable newest-first ordering.
             createdAt: new Date().toISOString(),
-            amount: formData.type === "income" ? amount : -amount,
-            icon: getCategoryIcon(formData.category),
+            amount: isIncome ? amount : -amount,
+            icon: isIncome ? INCOME_ICON : getCategoryDefinition(category).icon,
         };
 
         onAdd(transaction);
@@ -81,19 +109,25 @@ export default function TransactionModal({
     return (
         <div
             className="transaction-modal-overlay"
-            onClick={onClose}
+            onClick={(event) => {
+                if (event.target === event.currentTarget) onClose();
+            }}
         >
             <form
+                ref={dialogRef}
                 className="transaction-form transaction-modal"
                 onSubmit={handleSubmit}
-                onClick={(event) => event.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="transaction-modal-title"
+                tabIndex={-1}
+                noValidate
             >
                 <div className="transaction-modal-header">
                     <div className="transaction-modal-title">
-                        <div className="transaction-modal-icon">+</div>
-
+                        <div className="transaction-modal-icon" aria-hidden="true">+</div>
                         <div>
-                            <h3>New Transaction</h3>
+                            <h3 id="transaction-modal-title">New Transaction</h3>
                             <p>Add a new income or expense</p>
                         </div>
                     </div>
@@ -108,10 +142,7 @@ export default function TransactionModal({
                     </button>
                 </div>
 
-                <label htmlFor="transaction-name">
-                    Transaction Name
-                </label>
-
+                <label htmlFor="transaction-name">Transaction Name</label>
                 <input
                     id="transaction-name"
                     type="text"
@@ -119,28 +150,32 @@ export default function TransactionModal({
                     placeholder="e.g. Supermarket"
                     value={formData.name}
                     onChange={handleChange}
-                    autoFocus
-                    required
+                    aria-invalid={formError === "Enter a name."}
+                    aria-describedby={formError ? "transaction-form-error" : undefined}
                 />
+                {formError && (
+                    <p id="transaction-form-error" className="transaction-form-error" role="alert">
+                        {formError}
+                    </p>
+                )}
 
-                <label htmlFor="transaction-category">
-                    Category
-                </label>
-
+                <label htmlFor="transaction-category">Category</label>
                 <select
                     id="transaction-category"
                     name="category"
-                    value={formData.category}
+                    value={formData.type === "income" ? "" : formData.category}
                     onChange={handleChange}
                     disabled={formData.type === "income"}
                     aria-describedby={formData.type === "income" ? "income-category-help" : undefined}
                 >
-                    <option value="Food">Food</option>
-                    <option value="Shopping">Shopping</option>
-                    <option value="Transport">Transport</option>
-                    <option value="Entertainment">Entertainment</option>
-                    <option value="Bills">Bills</option>
-                    <option value="Other">Other</option>
+                    {formData.type === "income" && (
+                        <option value="">Not applicable</option>
+                    )}
+                    {EXPENSE_CATEGORIES.map((category) => (
+                        <option key={category.label} value={category.label}>
+                            {category.label}
+                        </option>
+                    ))}
                 </select>
                 {formData.type === "income" && (
                     <p id="income-category-help" className="transaction-category-help">
@@ -148,10 +183,7 @@ export default function TransactionModal({
                     </p>
                 )}
 
-                <label htmlFor="transaction-type">
-                    Transaction Type
-                </label>
-
+                <label htmlFor="transaction-type">Transaction Type</label>
                 <select
                     id="transaction-type"
                     name="type"
@@ -162,13 +194,9 @@ export default function TransactionModal({
                     <option value="income">Income</option>
                 </select>
 
-                <label htmlFor="transaction-amount">
-                    Amount
-                </label>
-
+                <label htmlFor="transaction-amount">Amount</label>
                 <div className="transaction-amount-input">
                     <span>$</span>
-
                     <input
                         id="transaction-amount"
                         type="number"
@@ -178,23 +206,16 @@ export default function TransactionModal({
                         step="0.01"
                         value={formData.amount}
                         onChange={handleChange}
-                        required
+                        aria-invalid={formError === "Enter an amount greater than 0."}
+                        aria-describedby={formError ? "transaction-form-error" : undefined}
                     />
                 </div>
 
                 <div className="transaction-form-buttons">
-                    <button
-                        type="button"
-                        className="cancel-transaction"
-                        onClick={onClose}
-                    >
+                    <button type="button" className="cancel-transaction" onClick={onClose}>
                         Cancel
                     </button>
-
-                    <button
-                        type="submit"
-                        className="save-transaction"
-                    >
+                    <button type="submit" className="save-transaction">
                         Add Transaction
                     </button>
                 </div>

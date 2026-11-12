@@ -1,36 +1,15 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import Transactions from "./components/Transactions/Transactions.jsx";
 import RecentPurchases from "./components/RecentPurchases/RecentPurchases.jsx";
-import CircleGroup from "./components/Summery/CircleGroup.jsx";
-
-import {
-    getTransactions,
-    saveTransactions,
-} from "./HookUp/localStorage.js";
-
-import {
-    getTransactionStats,
-} from "./HookUp/transactionStats.js";
-
-const CATEGORY_COLORS = {
-    food: "#3B82F6",
-    "food & drinks": "#3B82F6",
-    shopping: "#F97316",
-    transport: "#14B8A6",
-    entertainment: "#A855F7",
-    bills: "#E11D48",
-    other: "#EAB308",
-};
+import CircleGroup from "./components/Summary/CircleGroup.jsx";
+import { getTransactions, saveTransactions } from "./lib/localStorage.js";
+import { getTransactionStats } from "./lib/transactionStats.js";
+import { getCategoryColor } from "./lib/categories.js";
 
 function App() {
-    const [transactions, setTransactions] = useState(
-        () => getTransactions()
-    );
-
-    useEffect(() => {
-        saveTransactions(transactions);
-    }, [transactions]);
+    const [loadedStorage] = useState(() => getTransactions());
+    const [transactions, setTransactions] = useState(loadedStorage.transactions);
 
     const stats = useMemo(
         () => getTransactionStats(transactions),
@@ -38,18 +17,25 @@ function App() {
     );
 
     const circleData = stats.categoryStats.map((stat) => ({
-        id: stat.category,
+        id: stat.category.toLowerCase(),
         label: stat.category,
         amount: stat.amount,
         percentage: stat.percentage,
-        color: CATEGORY_COLORS[stat.category.toLowerCase()] || "#06B6D4",
+        color: getCategoryColor(stat.category),
     }));
 
     return (
         <main className="app-shell">
             <div className="dashboard-grid">
                 <div className="dashboard-main-column">
-                    <CircleGroup items={circleData} />
+                    <CircleGroup
+                        items={circleData}
+                        balance={{
+                            totalIncome: stats.totalIncome,
+                            totalExpenses: stats.totalExpenses,
+                            net: stats.net,
+                        }}
+                    />
                     <RecentPurchases transactions={transactions} />
                 </div>
 
@@ -57,6 +43,7 @@ function App() {
                     <Transactions
                         transactions={transactions}
                         setTransactions={setTransactions}
+                        onTransactionsChange={saveTransactions}
                     />
                 </aside>
             </div>

@@ -1,7 +1,3 @@
-/* =========================
-   FONT SYSTEM
-========================= */
-
 :root {
     --font-heading: "Manrope", sans-serif;
     --font-body: "Inter", sans-serif;
@@ -13,13 +9,7 @@
     background: #020817;
 }
 
-/* =========================
-   GLOBAL RESET + TYPOGRAPHY
-========================= */
-
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 html {
     min-width: 320px;
@@ -31,6 +21,7 @@ body {
     min-width: 320px;
     min-height: 100vh;
     margin: 0;
+    overflow-x: hidden;
     font-family: var(--font-body);
     font-size: 16px;
     font-weight: 400;
@@ -40,7 +31,6 @@ body {
         radial-gradient(ellipse at 12% 0%, rgba(0, 76, 247, 0.12), transparent 38%),
         radial-gradient(ellipse at 100% 90%, rgba(0, 119, 255, 0.08), transparent 35%),
         #020817;
-
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -53,15 +43,8 @@ select {
     font-size: 15px;
 }
 
-button {
-    color: inherit;
-}
-
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
-}
-
-/* Financial numbers */
+button { color: inherit; }
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); }
 
 .money,
 .amount,
@@ -73,183 +56,66 @@ h1, h2, h3, h4, h5, h6 {
     font-variant-numeric: tabular-nums;
 }
 
-/* =========================
-   DASHBOARD LAYOUT
-========================= */
-
 .app-shell {
-    width: min(100% - 40px, 1120px);
-    min-height: 100vh;
+    width: min(calc(100% - 40px), 1440px);
+    min-height: 100dvh;
     margin: 0 auto;
-    padding: 28px 0;
+    padding: 32px 0;
 }
 
 .dashboard-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.28fr) minmax(300px, 0.9fr);
-    align-items: start;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
     gap: 16px;
+    width: 100%;
+    min-width: 0;
 }
 
 .dashboard-main-column,
 .dashboard-side-column {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 16px;
     min-width: 0;
 }
 
-@media (max-width: 760px) {
-    .app-shell {
-        width: min(100% - 28px, 560px);
-        padding: 18px 0;
-    }
+.dashboard-side-column { min-height: 0; }
 
+@media (min-width: 960px) {
     .dashboard-grid {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 14px;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 22px;
+        min-height: calc(100dvh - 64px);
     }
 
+    .dashboard-main-column,
     .dashboard-side-column {
-        order: 2;
+        min-height: 0;
+        gap: 18px;
     }
+
+    .dashboard-main-column > .circle-group { flex: 0 0 auto; }
+    .dashboard-main-column > .recent-purchases { flex: 1 1 0; }
+    .dashboard-side-column > .add-transaction-btn { flex: 0 0 auto; }
+    .dashboard-side-column > .transactions-section { flex: 1 1 0; }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 959px) {
     .app-shell {
-        width: min(100% - 20px, 560px);
-        padding: 10px 0;
-    }
-}
-
-/* Keep the dashboard centered and let it use more of the desktop viewport. */
-.app-shell {
-    display: flex;
-    align-items: center;
-    width: min(100% - 64px, 1440px);
-    min-height: 100dvh;
-    padding: 36px 0;
-}
-
-.dashboard-grid {
-    width: 100%;
-    grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.95fr);
-    align-items: stretch;
-    gap: 22px;
-}
-
-.dashboard-main-column,
-.dashboard-side-column {
-    gap: 20px;
-}
-
-@media (max-width: 900px) {
-    .app-shell {
-        align-items: flex-start;
-        width: min(100% - 40px, 720px);
+        width: min(calc(100% - 40px), 760px);
+        min-height: 100dvh;
         padding: 24px 0;
     }
 
-    .dashboard-grid {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 18px;
-    }
-}
-
-@media (max-width: 420px) {
-    .app-shell {
-        width: min(100% - 20px, 560px);
-        padding: 12px 0;
-    }
-}
-
-/* =========================
-   MOBILE HORIZONTAL DASHBOARD
-   Keep dashboard panels beside each other in a swipeable row.
-========================= */
-
-@media (max-width: 760px) {
-    .app-shell {
-        display: block;
-        width: calc(100% - 20px);
-        min-height: 100dvh;
-        margin: 0 auto;
-        padding: 12px 0 18px;
-    }
-
-    .dashboard-grid {
-        display: grid;
-        grid-auto-flow: column;
-        grid-auto-columns: minmax(280px, 90%);
-        grid-template-columns: none;
-        align-items: stretch;
-        gap: 12px;
-        width: 100%;
-        overflow-x: auto;
-        overflow-y: hidden;
-        padding: 2px 1px 12px;
-        scroll-snap-type: x mandatory;
-        overscroll-behavior-x: contain;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
-        scrollbar-color: #17396f transparent;
-    }
-
-    .dashboard-grid::-webkit-scrollbar {
-        height: 5px;
-    }
-
-    .dashboard-grid::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    .dashboard-grid::-webkit-scrollbar-thumb {
-        background: #17396f;
-        border-radius: 10px;
-    }
-
-    /* Flatten the two desktop columns so all dashboard panels become
-       direct grid items and can sit in the same horizontal row. */
+    .dashboard-grid { gap: 16px; }
     .dashboard-main-column,
-    .dashboard-side-column {
-        display: contents;
-    }
-
-    .circle-group,
-    .recent-purchases,
-    .add-transaction-btn,
-    .transactions-section {
-        width: 100%;
-        min-width: 0;
-        scroll-snap-align: start;
-    }
-
-    .circle-group,
-    .recent-purchases,
-    .transactions-section {
-        min-height: 360px;
-        height: 360px;
-        max-height: 360px;
-    }
-
-    .add-transaction-btn {
-        align-self: start;
-        min-height: 54px;
-        margin: 0;
-    }
-
-    .transactions-section {
-        padding: 14px;
-    }
-
-    .transactions-list {
-        max-height: 285px;
-    }
+    .dashboard-side-column { gap: 16px; }
 }
 
-@media (max-width: 360px) {
-    .dashboard-grid {
-        grid-auto-columns: minmax(270px, 92%);
-        gap: 10px;
+@media (max-width: 399px) {
+    .app-shell {
+        width: calc(100% - 32px);
+        padding: 16px 0;
     }
 }

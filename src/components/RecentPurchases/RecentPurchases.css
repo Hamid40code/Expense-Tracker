@@ -1,7 +1,3 @@
-/* =========================
-   RECENT PURCHASES PREVIEW
-========================= */
-
 .recent-purchases {
     --purchase-bg: #06132b;
     --purchase-border: rgba(49, 104, 185, 0.34);
@@ -10,15 +6,13 @@
     --purchase-accent: #28aaff;
 
     display: flex;
+    flex: 1 1 0;
     flex-direction: column;
     width: 100%;
-    height: 198px;
-    min-height: 198px;
-    max-height: 198px;
     min-width: 0;
-    padding: 10px 13px 8px;
+    min-height: 0;
+    padding: 14px 16px 12px;
     overflow: hidden;
-
     color: var(--purchase-text);
     background:
         radial-gradient(circle at 10% 0%, rgba(0, 76, 247, 0.13), transparent 42%),
@@ -37,10 +31,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex: 0 0 29px;
-    min-height: 29px;
+    flex: 0 0 auto;
+    min-height: 42px;
     gap: 10px;
-    padding-bottom: 7px;
+    padding-bottom: 8px;
     border-bottom: 1px solid rgba(131, 171, 212, 0.13);
 }
 
@@ -55,9 +49,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 25px;
-    height: 25px;
-    flex: 0 0 25px;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
     color: #83baff;
     background: #102f68;
     border: 1px solid rgba(71, 143, 255, 0.18);
@@ -68,8 +62,8 @@
     margin: 0;
     color: var(--purchase-text);
     font-family: var(--font-heading);
-    font-size: 0.79rem;
-    font-weight: 650;
+    font-size: 1rem;
+    font-weight: 700;
     line-height: 1.2;
     white-space: nowrap;
 }
@@ -77,14 +71,16 @@
 .recent-purchases-view-all {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     flex: 0 0 auto;
     gap: 5px;
-    padding: 3px 0;
+    min-height: 44px;
+    padding: 0 5px;
     color: var(--purchase-accent);
     background: transparent;
     border: 0;
-    font-size: 0.67rem;
-    font-weight: 500;
+    font-size: 12px;
+    font-weight: 600;
     cursor: pointer;
     transition: color 0.2s ease, transform 0.2s ease;
 }
@@ -107,7 +103,7 @@
 
 .recent-purchases-list {
     display: flex;
-    flex: 1 1 auto;
+    flex: 1 1 0;
     flex-direction: column;
     min-height: 0;
     overflow-x: hidden;
@@ -135,29 +131,27 @@
 .purchase-row {
     display: flex;
     align-items: center;
-    flex: 0 0 36px;
-    min-height: 36px;
+    flex: 0 0 54px;
+    min-height: 54px;
     min-width: 0;
-    gap: 10px;
-    padding: 3px 0;
+    gap: 12px;
+    padding: 4px 0;
     border-bottom: 1px solid rgba(131, 171, 212, 0.1);
     animation: purchase-row-in 0.25s ease both;
 }
 
-.purchase-row:last-child {
-    border-bottom: 0;
-}
+.purchase-row:last-child { border-bottom: 0; }
 
 .purchase-row-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 29px;
-    height: 29px;
-    flex: 0 0 29px;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
     border-radius: 50%;
     background: #102b5a;
-    font-size: 0.95rem;
+    font-size: 1rem;
     line-height: 1;
 }
 
@@ -171,8 +165,8 @@
     overflow: hidden;
     color: var(--purchase-text);
     font-family: var(--font-body);
-    font-size: 0.69rem;
-    font-weight: 550;
+    font-size: 14px;
+    font-weight: 600;
     line-height: 1.25;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -182,10 +176,10 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    margin: 2px 0 0;
+    margin: 3px 0 0;
     overflow: hidden;
     color: var(--purchase-muted);
-    font-size: 0.61rem;
+    font-size: 12px;
     font-weight: 400;
     line-height: 1.2;
     white-space: nowrap;
@@ -196,15 +190,13 @@
     text-overflow: ellipsis;
 }
 
-.purchase-row-separator {
-    flex: 0 0 auto;
-}
+.purchase-row-separator { flex: 0 0 auto; }
 
 .purchase-row-amount {
     flex: 0 0 auto;
     color: var(--purchase-text);
     font-family: var(--font-number);
-    font-size: 0.7rem;
+    font-size: 13px;
     font-weight: 600;
     white-space: nowrap;
 }
@@ -221,12 +213,9 @@
 }
 
 .recent-purchases-empty span { font-size: 1.2rem; }
-.recent-purchases-empty p { margin: 0; font-size: 0.68rem; }
+.recent-purchases-empty p { margin: 0; font-size: 12px; }
 
-/* =========================
-   PURCHASE HISTORY MODAL
-========================= */
-
+/* Purchase history dialog */
 .purchases-overlay {
     position: fixed;
     inset: 0;
@@ -281,7 +270,7 @@
     color: #fefefe;
     font-family: var(--font-heading);
     font-size: 1.4rem;
-    font-weight: 750;
+    font-weight: 700;
 }
 
 .purchases-page-description {
@@ -294,9 +283,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
-    flex: 0 0 34px;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
     color: #83abd4;
     background: #0b1e48;
     border: 1px solid #17396f;
@@ -339,9 +328,9 @@
     font-size: 1.2rem;
 }
 
-.purchases-page-list .purchase-row-info h3 { font-size: 0.88rem; }
-.purchases-page-list .purchase-row-info p { margin-top: 5px; font-size: 0.74rem; }
-.purchases-page-list .purchase-row-amount { font-size: 0.85rem; }
+.purchases-page-list .purchase-row-info h3 { font-size: 14px; }
+.purchases-page-list .purchase-row-info p { margin-top: 5px; font-size: 12px; }
+.purchases-page-list .purchase-row-amount { font-size: 14px; }
 
 .purchases-page-empty {
     display: flex;
@@ -352,10 +341,6 @@
     font-size: 0.85rem;
     text-align: center;
 }
-
-/* =========================
-   ANIMATIONS + RESPONSIVE
-========================= */
 
 @keyframes purchase-row-in {
     from { opacity: 0; transform: translateY(5px); }
@@ -372,15 +357,36 @@
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 959px) {
     .recent-purchases {
-        padding-right: 11px;
-        padding-left: 11px;
+        flex: 0 0 auto;
+        min-height: 0;
     }
 
-    .recent-purchases-header h2 { font-size: 0.74rem; }
-    .purchase-row { gap: 8px; }
-    .purchase-row-amount { font-size: 0.66rem; }
+    .recent-purchases-list {
+        flex: 0 0 auto;
+        overflow: visible;
+    }
+}
+
+@media (max-width: 500px) {
+    .recent-purchases {
+        padding: 12px;
+    }
+
+    .recent-purchases-header { min-height: 42px; }
+    .recent-purchases-header h2 { font-size: 15px; }
+
+    .purchase-row {
+        flex-basis: 52px;
+        min-height: 52px;
+        gap: 8px;
+    }
+
+    .purchase-row-info h3 { font-size: 13px; }
+    .purchase-row-info p { font-size: 12px; }
+    .purchase-row-amount { font-size: 12px; }
+
     .purchases-overlay { padding: 12px; }
 
     .purchases-page {
@@ -400,72 +406,4 @@
 
     .recent-purchases-view-all,
     .purchases-page-close { transition: none; }
-}
-
-@media (min-width: 901px) {
-    .recent-purchases {
-        height: 230px;
-        min-height: 230px;
-        max-height: 230px;
-        padding: 15px 18px 12px;
-    }
-
-    .recent-purchases-header h2 {
-        font-size: 0.9rem;
-    }
-
-    .purchase-row {
-        flex-basis: 43px;
-        min-height: 43px;
-        gap: 12px;
-    }
-
-    .purchase-row-info h3 {
-        font-size: 0.78rem;
-    }
-
-    .purchase-row-info p {
-        font-size: 0.68rem;
-    }
-
-    .purchase-row-amount {
-        font-size: 0.78rem;
-    }
-}
-
-/* Fill the mobile dashboard card while keeping the purchase list scrollable. */
-@media (max-width: 760px) {
-    .recent-purchases {
-        height: 360px;
-        min-height: 360px;
-        max-height: 360px;
-        padding: 14px;
-    }
-
-    .recent-purchases-header {
-        flex-basis: 34px;
-        min-height: 34px;
-    }
-
-    .recent-purchases-header h2 {
-        font-size: 0.82rem;
-    }
-
-    .purchase-row {
-        flex-basis: 56px;
-        min-height: 56px;
-        gap: 9px;
-    }
-
-    .purchase-row-info h3 {
-        font-size: 0.73rem;
-    }
-
-    .purchase-row-info p {
-        font-size: 0.62rem;
-    }
-
-    .purchase-row-amount {
-        font-size: 0.69rem;
-    }
 }

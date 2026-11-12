@@ -1,30 +1,21 @@
-/* =========================
-   ADD TRANSACTION ACTION
-========================= */
-
 .add-transaction-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 9px;
-
     width: 100%;
-    min-height: 46px;
+    min-height: 48px;
     padding: 10px 14px;
-
     color: #fff;
     background: linear-gradient(110deg, #087bff, #0648e8);
     border: 1px solid rgba(80, 165, 255, 0.65);
     border-radius: 12px;
-
     box-shadow:
         0 5px 20px rgba(0, 89, 255, 0.28),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
-
     font-size: 0.84rem;
     font-weight: 600;
     cursor: pointer;
-
     transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -34,9 +25,7 @@
     transform: translateY(-1px);
 }
 
-.add-transaction-btn:active {
-    transform: scale(0.98);
-}
+.add-transaction-btn:active { transform: scale(0.98); }
 
 .add-transaction-btn:focus-visible {
     outline: 2px solid #83baff;
@@ -50,13 +39,9 @@
     width: 20px;
     height: 20px;
     font-size: 1.35rem;
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1;
 }
-
-/* =========================
-   TRANSACTIONS PANEL
-========================= */
 
 .transactions-section {
     --text: #f4f7ff;
@@ -64,27 +49,23 @@
     --border: rgba(49, 104, 185, 0.32);
 
     display: flex;
+    flex: 1 1 0;
     flex-direction: column;
     gap: 12px;
-
     width: 100%;
     min-width: 0;
-    min-height: 395px;
-    padding: 14px;
-
+    min-height: 0;
+    padding: 18px;
     color: var(--text);
     background:
         radial-gradient(circle at 15% 0%, rgba(0, 91, 255, 0.13), transparent 42%),
         linear-gradient(145deg, #071630, #06132b 72%, #071a38);
-
     border: 1px solid var(--border);
     border-radius: 17px;
-
     box-shadow:
         0 12px 32px rgba(0, 0, 0, 0.28),
         0 0 18px rgba(0, 76, 247, 0.08),
         inset 0 1px 0 rgba(142, 185, 255, 0.06);
-
     font-family: var(--font-body);
     letter-spacing: -0.02em;
 }
@@ -121,15 +102,15 @@
 .transactions-header h2 {
     margin: 0;
     color: var(--text);
-    font-size: 0.86rem;
-    font-weight: 650;
+    font-size: 1rem;
+    font-weight: 700;
 }
 
 .transactions-header p {
-    display: none;
+    display: block;
     margin: 4px 0 0;
     color: var(--text-muted);
-    font-size: 0.68rem;
+    font-size: 0.75rem;
 }
 
 .transactions-count {
@@ -149,23 +130,18 @@
 
 .transactions-list {
     display: flex;
-    flex: 1;
+    flex: 1 1 0;
     flex-direction: column;
     min-height: 0;
-    max-height: 440px;
     overflow-y: auto;
     overflow-x: hidden;
     padding-right: 2px;
+    scrollbar-width: thin;
+    scrollbar-color: #17396f transparent;
 }
 
-.transactions-list::-webkit-scrollbar {
-    width: 4px;
-}
-
-.transactions-list::-webkit-scrollbar-track {
-    background: transparent;
-}
-
+.transactions-list::-webkit-scrollbar { width: 4px; }
+.transactions-list::-webkit-scrollbar-track { background: transparent; }
 .transactions-list::-webkit-scrollbar-thumb {
     background: #17396f;
     border-radius: 10px;
@@ -182,87 +158,53 @@
     text-align: center;
 }
 
-.transactions-empty span {
-    font-size: 1.8rem;
-}
+.transactions-empty span { font-size: 1.8rem; }
 
 .transactions-empty h3 {
     margin: 10px 0 0;
     color: var(--text);
-    font-size: 0.86rem;
+    font-size: 0.9rem;
     font-weight: 600;
 }
 
 .transactions-empty p {
     margin: 5px 0 0;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 959px) {
     .transactions-section {
+        flex: 0 0 auto;
         min-height: 0;
-    }
-
-    .transactions-list {
-        max-height: 420px;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .add-transaction-btn {
-        transition: none;
-    }
-}
-
-@media (min-width: 901px) {
-    .transactions-section {
-        min-height: 520px;
-        padding: 20px;
-        gap: 16px;
-    }
-
-    .transactions-header h2 {
-        font-size: 1rem;
-    }
-
-    .transactions-header p {
-        display: block;
-        font-size: 0.75rem;
-    }
-
-    .transactions-list {
-        max-height: 560px;
-    }
-}
-
-/* Mobile transaction panel sizing for the horizontal dashboard row. */
-@media (max-width: 760px) {
-    .transactions-section {
-        min-height: 360px;
-        height: 360px;
         padding: 14px;
         gap: 10px;
     }
 
+    .transactions-list {
+        flex: 0 1 auto;
+        max-height: 330px;
+        min-height: 0;
+    }
+}
+
+@media (max-width: 500px) {
     .transactions-header {
         gap: 7px;
         padding-bottom: 9px;
     }
 
-    .transactions-title {
-        gap: 7px;
-    }
+    .transactions-title { gap: 7px; }
 
     .transactions-title-icon {
         width: 27px;
         height: 27px;
     }
 
-    .transactions-header h2 {
-        font-size: 0.78rem;
-    }
+    .transactions-header h2 { font-size: 0.9rem; }
+    .transactions-header p { font-size: 12px; }
+    .transactions-list { max-height: 320px; }
+}
 
-    .transactions-list {
-        max-height: 285px;
-    }
+@media (prefers-reduced-motion: reduce) {
+    .add-transaction-btn { transition: none; }
 }
