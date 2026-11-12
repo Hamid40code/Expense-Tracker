@@ -1,112 +1,87 @@
-
 /* =========================
    SPENDING SUMMARY
 ========================= */
 
 .circle-group {
-    width: 100%;
-    min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding: 18px;
-    box-sizing: border-box;
+    gap: 12px;
+
+    width: 100%;
+    min-width: 0;
+    padding: 13px;
 
     color: #f1f5ff;
-
     background:
-        linear-gradient(
-            145deg,
-            #07152f 0%,
-            #091a3b 55%,
-            #06132b 100%
-        );
+        radial-gradient(circle at 12% 0%, rgba(0, 91, 255, 0.16), transparent 45%),
+        linear-gradient(145deg, #071630, #06132b 65%, #071a38);
 
-    border: 1px solid rgba(64, 125, 210, 0.3);
-    border-radius: 18px;
+    border: 1px solid rgba(49, 104, 185, 0.34);
+    border-radius: 17px;
 
     box-shadow:
-        0 12px 35px rgba(0, 0, 0, 0.25),
-        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        0 12px 32px rgba(0, 0, 0, 0.27),
+        0 0 20px rgba(0, 76, 247, 0.08),
+        inset 0 1px 0 rgba(142, 185, 255, 0.06);
 }
-
-
-/* =========================
-   HEADER
-========================= */
 
 .spending-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    min-height: 25px;
 }
 
 .spending-title {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
 }
 
 .spending-title h2 {
     margin: 0;
     color: #f1f5ff;
-
-    font-family: "Manrope", sans-serif;
-    font-size: 17px;
-    font-weight: 700;
+    font-family: var(--font-heading);
+    font-size: 0.88rem;
+    font-weight: 650;
     letter-spacing: -0.3px;
 }
 
 .spending-title-icon {
-    height: 20px;
     display: flex;
     align-items: flex-end;
     gap: 3px;
+    height: 19px;
 }
 
 .spending-title-icon span {
     display: block;
     width: 5px;
     border-radius: 2px 2px 0 0;
-    background: #168BFF;
-    box-shadow: 0 0 10px rgba(22, 139, 255, 0.4);
+    background: #168bff;
+    box-shadow: 0 0 10px rgba(22, 139, 255, 0.45);
 }
 
-.spending-title-icon span:nth-child(1) {
-    height: 9px;
-}
+.spending-title-icon span:nth-child(1) { height: 9px; }
+.spending-title-icon span:nth-child(2) { height: 14px; }
+.spending-title-icon span:nth-child(3) { height: 19px; }
 
-.spending-title-icon span:nth-child(2) {
-    height: 14px;
-}
-
-.spending-title-icon span:nth-child(3) {
-    height: 20px;
-}
-
-
-/* =========================
-   CHART + LEGEND
-========================= */
+/* Chart + legend */
 
 .spending-content {
     display: flex;
     align-items: center;
     justify-content: space-around;
-    gap: 22px;
+    gap: 15px;
     width: 100%;
     min-width: 0;
+    padding: 2px 0;
 }
 
-
-/* =========================
-   CIRCULAR CHART
-========================= */
-
 .circle-chart {
-    width: 165px;
-    height: 165px;
-    flex-shrink: 0;
+    width: 142px;
+    height: 142px;
+    flex: 0 0 142px;
 }
 
 .circle-chart-svg {
@@ -114,8 +89,7 @@
     width: 100%;
     height: 100%;
     overflow: visible;
-
-    filter: drop-shadow(0 5px 12px rgba(0, 0, 0, 0.25));
+    filter: drop-shadow(0 5px 12px rgba(0, 0, 0, 0.3));
 }
 
 .circle-empty {
@@ -125,64 +99,55 @@
 
 .circle-empty-label {
     fill: #c3d7f5;
-    font-family: "IBM Plex Mono", monospace;
+    font-family: var(--font-number);
     font-size: 25px;
     font-weight: 700;
 }
 
-
-/* =========================
-   CATEGORY LEGEND
-========================= */
+/* Category legend */
 
 .circle-legend {
-    flex: 1;
-    min-width: 0;
-
     display: flex;
+    flex: 1;
     flex-direction: column;
-    gap: 13px;
-
+    gap: 10px;
+    min-width: 0;
     padding: 0;
     margin: 0;
-
     list-style: none;
 }
 
 .circle-legend-item {
     display: grid;
-    grid-template-columns: 13px minmax(65px, 1fr) 60px 38px;
+    grid-template-columns: 11px minmax(55px, 1fr) 49px 32px;
     align-items: center;
-    gap: 9px;
-
+    gap: 7px;
     min-width: 0;
-
-    font-family: "Inter", sans-serif;
-    font-size: 12px;
+    font-family: var(--font-body);
+    font-size: 0.66rem;
 }
 
 .circle-legend-color {
-    width: 13px;
-    height: 13px;
+    width: 11px;
+    height: 11px;
     border-radius: 50%;
-
     box-shadow: 0 0 9px rgba(255, 255, 255, 0.12);
 }
 
 .circle-legend-label {
     min-width: 0;
     overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-
     color: #e5edff;
     font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.circle-legend-amount {
+.circle-legend-amount,
+.circle-legend-percentage {
     color: #f1f5ff;
-    font-family: "IBM Plex Mono", monospace;
-    font-size: 11px;
+    font-family: var(--font-number);
+    font-size: 0.62rem;
     font-weight: 500;
     text-align: right;
     white-space: nowrap;
@@ -190,148 +155,113 @@
 
 .circle-legend-percentage {
     color: #a9c0e6;
-    font-family: "IBM Plex Mono", monospace;
-    font-size: 11px;
-    font-weight: 500;
-    text-align: right;
-    white-space: nowrap;
 }
-
-
-/* =========================
-   EMPTY STATE
-========================= */
 
 .circle-empty-message {
-    color: #91a8ce;
-    font-size: 13px;
-    text-align: center;
     padding: 15px 0;
+    color: #91a8ce;
+    font-size: 0.78rem;
+    text-align: center;
 }
 
-
-/* =========================
-   TOTAL SPENDING
-========================= */
+/* Total spending */
 
 .total-spending {
-    width: 100%;
-    min-height: 62px;
-    box-sizing: border-box;
-
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 14px;
+    gap: 12px;
+    width: 100%;
+    min-height: 47px;
+    padding: 7px 12px;
 
-    padding: 10px 16px;
-
-    background:
-        linear-gradient(
-            110deg,
-            #102b59,
-            #142f62
-        );
-
+    background: linear-gradient(110deg, #102b59, #142f62);
     border: 1px solid rgba(83, 145, 230, 0.2);
-    border-radius: 12px;
-
+    border-radius: 11px;
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.04),
         0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
-.total-spending-icon {
-    width: 32px;
-    height: 32px;
-    flex-shrink: 0;
-
+.total-spending-icon,
+.total-spending-icon svg {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 29px;
+    height: 29px;
+    flex-shrink: 0;
 }
 
 .total-spending-icon svg {
-    width: 32px;
-    height: 32px;
-
     filter: drop-shadow(0 0 8px rgba(22, 139, 255, 0.3));
 }
 
 .total-spending-info {
     display: flex;
     flex-direction: column;
-    gap: 1px;
+    gap: 0;
 }
 
 .total-spending-label {
     color: #a9c0e6;
-    font-family: "Inter", sans-serif;
-    font-size: 11px;
+    font-family: var(--font-body);
+    font-size: 0.61rem;
     font-weight: 500;
+    line-height: 1.3;
 }
 
 .total-spending-amount {
-    color: #ffffff;
-    font-family: "IBM Plex Mono", monospace;
-    font-size: 19px;
+    color: #fff;
+    font-family: var(--font-number);
+    font-size: 0.96rem;
     font-weight: 700;
     letter-spacing: -0.5px;
+    line-height: 1.3;
 }
 
-
-/* =========================
-   RESPONSIVE
-========================= */
+/* Responsive */
 
 @media (max-width: 480px) {
     .circle-group {
-        padding: 14px;
-        gap: 14px;
+        padding: 12px;
+        gap: 11px;
     }
 
     .spending-content {
-        gap: 12px;
+        gap: 10px;
     }
 
     .circle-chart {
         width: 125px;
         height: 125px;
+        flex-basis: 125px;
     }
 
     .circle-legend {
-        gap: 11px;
+        gap: 9px;
     }
 
     .circle-legend-item {
-        grid-template-columns: 11px minmax(45px, 1fr) 48px 34px;
-        gap: 6px;
-        font-size: 10px;
+        grid-template-columns: 10px minmax(42px, 1fr) 43px 30px;
+        gap: 5px;
+        font-size: 0.6rem;
     }
 
     .circle-legend-color {
-        width: 11px;
-        height: 11px;
+        width: 10px;
+        height: 10px;
     }
 
     .circle-legend-amount,
     .circle-legend-percentage {
-        font-size: 10px;
+        font-size: 0.57rem;
     }
 
     .spending-title h2 {
-        font-size: 15px;
-    }
-
-    .total-spending {
-        min-height: 58px;
+        font-size: 0.82rem;
     }
 }
-
-
-/* =========================
-   REDUCED MOTION
-========================= */
 
 @media (prefers-reduced-motion: reduce) {
     .circle-group *,
@@ -339,5 +269,104 @@
     .circle-group *::after {
         animation-duration: 0.01ms !important;
         transition-duration: 0.01ms !important;
+    }
+}
+
+/* Give the summary more room on larger screens. */
+@media (min-width: 901px) {
+    .circle-group {
+        gap: 18px;
+        padding: 22px;
+    }
+
+    .spending-title h2 {
+        font-size: 1.05rem;
+    }
+
+    .spending-content {
+        justify-content: space-evenly;
+        gap: 24px;
+        padding: 8px 0;
+    }
+
+    .circle-chart {
+        width: clamp(170px, 16vw, 220px);
+        height: clamp(170px, 16vw, 220px);
+        flex-basis: clamp(170px, 16vw, 220px);
+    }
+
+    .circle-legend {
+        gap: 14px;
+    }
+
+    .circle-legend-item {
+        grid-template-columns: 13px minmax(70px, 1fr) 66px 42px;
+        gap: 10px;
+        font-size: 0.78rem;
+    }
+
+    .circle-legend-color {
+        width: 13px;
+        height: 13px;
+    }
+
+    .circle-legend-amount,
+    .circle-legend-percentage {
+        font-size: 0.72rem;
+    }
+
+    .total-spending {
+        min-height: 60px;
+    }
+
+    .total-spending-label {
+        font-size: 0.72rem;
+    }
+
+    .total-spending-amount {
+        font-size: 1.15rem;
+    }
+}
+
+/* Compact chart sizing for the horizontal mobile dashboard cards. */
+@media (max-width: 760px) {
+    .circle-group {
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px;
+    }
+
+    .spending-content {
+        justify-content: space-between;
+        gap: 9px;
+    }
+
+    .circle-chart {
+        width: clamp(96px, 34vw, 118px);
+        height: clamp(96px, 34vw, 118px);
+        flex: 0 0 clamp(96px, 34vw, 118px);
+    }
+
+    .circle-legend {
+        gap: 10px;
+    }
+
+    .circle-legend-item {
+        grid-template-columns: 9px minmax(36px, 1fr) 42px 28px;
+        gap: 4px;
+    }
+
+    .circle-legend-color {
+        width: 9px;
+        height: 9px;
+    }
+
+    .circle-legend-label {
+        font-size: 0.59rem;
+    }
+
+    .circle-legend-amount,
+    .circle-legend-percentage {
+        font-size: 0.55rem;
     }
 }

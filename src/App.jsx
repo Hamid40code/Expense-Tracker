@@ -1,46 +1,66 @@
-
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import Transactions from "./components/Transactions/Transactions.jsx";
+import RecentPurchases from "./components/RecentPurchases/RecentPurchases.jsx";
 import CircleGroup from "./components/Summery/CircleGroup.jsx";
 
-const CATEGORY_COLORS = [
-    "#5689E8",
-    "#34BFA3",
-    "#F0A44B",
-    "#A78BFA",
-    "#EF6B78",
-    "#38BDF8",
-    "#E879F9",
-    "#A3A3A3"
-];
+import {
+    getTransactions,
+    saveTransactions,
+} from "./HookUp/localStorage.js";
+
+import {
+    getTransactionStats,
+} from "./HookUp/transactionStats.js";
+
+const CATEGORY_COLORS = {
+    food: "#3B82F6",
+    "food & drinks": "#3B82F6",
+    shopping: "#F97316",
+    transport: "#14B8A6",
+    entertainment: "#A855F7",
+    bills: "#E11D48",
+    other: "#EAB308",
+};
 
 function App() {
-
-    const [stats, setStats] = useState({
-        totalExpenses: 0,
-        categoryStats: []
-    });
-
-    // Prepare circle data
-    const circleData = stats.categoryStats.map(
-        (stat, index) => ({
-            id: stat.category,
-            label: stat.category,
-            amount: stat.amount,
-            percentage: stat.percentage,
-            color: CATEGORY_COLORS[
-                index % CATEGORY_COLORS.length
-            ]
-        })
+    const [transactions, setTransactions] = useState(
+        () => getTransactions()
     );
 
-    return (
-        <>
-            <Transactions onStatsChange={setStats} />
+    useEffect(() => {
+        saveTransactions(transactions);
+    }, [transactions]);
 
-            <CircleGroup items={circleData} />
-        </>
+    const stats = useMemo(
+        () => getTransactionStats(transactions),
+        [transactions]
+    );
+
+    const circleData = stats.categoryStats.map((stat) => ({
+        id: stat.category,
+        label: stat.category,
+        amount: stat.amount,
+        percentage: stat.percentage,
+        color: CATEGORY_COLORS[stat.category.toLowerCase()] || "#06B6D4",
+    }));
+
+    return (
+        <main className="app-shell">
+            <div className="dashboard-grid">
+                <div className="dashboard-main-column">
+                    <CircleGroup items={circleData} />
+                    <RecentPurchases transactions={transactions} />
+                </div>
+
+                <aside className="dashboard-side-column">
+                    <Transactions
+                        transactions={transactions}
+                        setTransactions={setTransactions}
+                    />
+                </aside>
+            </div>
+        </main>
     );
 }
 

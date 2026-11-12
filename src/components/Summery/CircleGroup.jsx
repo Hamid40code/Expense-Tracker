@@ -2,14 +2,6 @@
 import CircleProgress from "./CircleProgress";
 import "./CircleGroup.css";
 
-const CATEGORY_COLORS = {
-    "food & drinks": "#168BFF",
-    "shopping": "#12D66B",
-    "entertainment": "#FFAA00",
-    "others": "#922BFF",
-    "other": "#922BFF",
-};
-
 function getCategoryName(item) {
     return (
         item.label ||
@@ -21,9 +13,7 @@ function getCategoryName(item) {
 }
 
 function getCategoryColor(item) {
-    const category = getCategoryName(item).toLowerCase();
-
-    return CATEGORY_COLORS[category] || item.color || "#168BFF";
+    return item.color || "#06B6D4";
 }
 
 function formatMoney(value) {
