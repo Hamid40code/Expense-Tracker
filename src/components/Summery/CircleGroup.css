@@ -1,0 +1,343 @@
+
+/* =========================
+   SPENDING SUMMARY
+========================= */
+
+.circle-group {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 18px;
+    box-sizing: border-box;
+
+    color: #f1f5ff;
+
+    background:
+        linear-gradient(
+            145deg,
+            #07152f 0%,
+            #091a3b 55%,
+            #06132b 100%
+        );
+
+    border: 1px solid rgba(64, 125, 210, 0.3);
+    border-radius: 18px;
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.spending-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.spending-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.spending-title h2 {
+    margin: 0;
+    color: #f1f5ff;
+
+    font-family: "Manrope", sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+
+.spending-title-icon {
+    height: 20px;
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+}
+
+.spending-title-icon span {
+    display: block;
+    width: 5px;
+    border-radius: 2px 2px 0 0;
+    background: #168BFF;
+    box-shadow: 0 0 10px rgba(22, 139, 255, 0.4);
+}
+
+.spending-title-icon span:nth-child(1) {
+    height: 9px;
+}
+
+.spending-title-icon span:nth-child(2) {
+    height: 14px;
+}
+
+.spending-title-icon span:nth-child(3) {
+    height: 20px;
+}
+
+
+/* =========================
+   CHART + LEGEND
+========================= */
+
+.spending-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 22px;
+    width: 100%;
+    min-width: 0;
+}
+
+
+/* =========================
+   CIRCULAR CHART
+========================= */
+
+.circle-chart {
+    width: 165px;
+    height: 165px;
+    flex-shrink: 0;
+}
+
+.circle-chart-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+
+    filter: drop-shadow(0 5px 12px rgba(0, 0, 0, 0.25));
+}
+
+.circle-empty {
+    stroke: rgba(255, 255, 255, 0.12);
+    stroke-width: 1.5;
+}
+
+.circle-empty-label {
+    fill: #c3d7f5;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 25px;
+    font-weight: 700;
+}
+
+
+/* =========================
+   CATEGORY LEGEND
+========================= */
+
+.circle-legend {
+    flex: 1;
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+
+    padding: 0;
+    margin: 0;
+
+    list-style: none;
+}
+
+.circle-legend-item {
+    display: grid;
+    grid-template-columns: 13px minmax(65px, 1fr) 60px 38px;
+    align-items: center;
+    gap: 9px;
+
+    min-width: 0;
+
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+}
+
+.circle-legend-color {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+
+    box-shadow: 0 0 9px rgba(255, 255, 255, 0.12);
+}
+
+.circle-legend-label {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    color: #e5edff;
+    font-weight: 500;
+}
+
+.circle-legend-amount {
+    color: #f1f5ff;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    font-weight: 500;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.circle-legend-percentage {
+    color: #a9c0e6;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    font-weight: 500;
+    text-align: right;
+    white-space: nowrap;
+}
+
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.circle-empty-message {
+    color: #91a8ce;
+    font-size: 13px;
+    text-align: center;
+    padding: 15px 0;
+}
+
+
+/* =========================
+   TOTAL SPENDING
+========================= */
+
+.total-spending {
+    width: 100%;
+    min-height: 62px;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+
+    padding: 10px 16px;
+
+    background:
+        linear-gradient(
+            110deg,
+            #102b59,
+            #142f62
+        );
+
+    border: 1px solid rgba(83, 145, 230, 0.2);
+    border-radius: 12px;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.04),
+        0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.total-spending-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.total-spending-icon svg {
+    width: 32px;
+    height: 32px;
+
+    filter: drop-shadow(0 0 8px rgba(22, 139, 255, 0.3));
+}
+
+.total-spending-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.total-spending-label {
+    color: #a9c0e6;
+    font-family: "Inter", sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.total-spending-amount {
+    color: #ffffff;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 480px) {
+    .circle-group {
+        padding: 14px;
+        gap: 14px;
+    }
+
+    .spending-content {
+        gap: 12px;
+    }
+
+    .circle-chart {
+        width: 125px;
+        height: 125px;
+    }
+
+    .circle-legend {
+        gap: 11px;
+    }
+
+    .circle-legend-item {
+        grid-template-columns: 11px minmax(45px, 1fr) 48px 34px;
+        gap: 6px;
+        font-size: 10px;
+    }
+
+    .circle-legend-color {
+        width: 11px;
+        height: 11px;
+    }
+
+    .circle-legend-amount,
+    .circle-legend-percentage {
+        font-size: 10px;
+    }
+
+    .spending-title h2 {
+        font-size: 15px;
+    }
+
+    .total-spending {
+        min-height: 58px;
+    }
+}
+
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+    .circle-group *,
+    .circle-group *::before,
+    .circle-group *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}

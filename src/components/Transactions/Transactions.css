@@ -1,0 +1,262 @@
+
+.transactions-section {
+  --bg-dark: #05122f;
+  --bg: #000a22;
+  --bg-light: #0b1e48;
+
+  --text: #fefefe;
+  --text-muted: #83abd4;
+
+  --border: #0b1e48;
+
+  --accent: #004cf7;
+  --accent-hover: #047bf7;
+
+  --income: #00b74c;
+  --expense: #f59218;
+
+  --blue-light: #83abd4;
+  --blue-dark: #002270;
+
+  --shadow: 0 10px 30px rgba(0, 10, 34, 0.3);
+
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+  padding: 20px;
+
+  background: var(--bg);
+  color: var(--text);
+
+  border: 1px solid var(--border);
+  border-radius: 18px;
+
+  box-shadow: var(--shadow);
+
+  box-sizing: border-box;
+
+  font-family: "Inter", sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.transactions-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  padding-bottom: 14px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.transactions-title {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  min-width: 0;
+}
+
+.transactions-title-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  background: var(--blue-dark);
+  color: var(--blue-light);
+
+  border-radius: 11px;
+}
+
+.transactions-header h2 {
+  margin: 0;
+
+  color: var(--text);
+
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.transactions-header p {
+  margin: 5px 0 0;
+
+  color: var(--text-muted);
+
+  font-size: 0.75rem;
+}
+
+.transactions-count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 28px;
+  height: 28px;
+
+  padding: 0 8px;
+
+  background: var(--blue-dark);
+  color: var(--blue-light);
+
+  border: 1px solid var(--border);
+  border-radius: 9px;
+
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.transactions-list {
+  display: flex;
+  flex-direction: column;
+
+  max-height: 380px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding-right: 4px;
+}
+
+.transactions-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.transactions-list::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+  border-radius: 10px;
+}
+
+.transactions-list::-webkit-scrollbar-thumb {
+  background: var(--blue-dark);
+  border-radius: 10px;
+}
+
+.transactions-list::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+.transactions-empty {
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  min-height: 180px;
+
+  text-align: center;
+
+  color: var(--text-muted);
+}
+
+.transactions-empty span {
+  font-size: 2rem;
+}
+
+.transactions-empty h3 {
+  margin: 12px 0 0;
+
+  color: var(--text);
+
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.transactions-empty p {
+  margin: 7px 0 0;
+
+  font-size: 0.75rem;
+}
+
+.add-transaction-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  width: 100%;
+  min-height: 46px;
+
+  margin-top: auto;
+  padding: 12px;
+
+  background: var(--accent);
+  color: var(--text);
+
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.add-transaction-btn:hover {
+  background: var(--accent-hover);
+
+  border-color: var(--accent-hover);
+
+  box-shadow: 0 5px 20px rgba(0, 76, 247, 0.25);
+
+  transform: translateY(-2px);
+}
+
+.add-transaction-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+
+/* Plus icon */
+
+.add-transaction-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 20px;
+  height: 20px;
+
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+@media (max-width: 500px) {
+  .transactions-section {
+    padding: 16px;
+
+    border-radius: 16px;
+  }
+
+  .transactions-header h2 {
+    font-size: 1rem;
+  }
+
+  .transactions-header p {
+    font-size: 0.7rem;
+  }
+}
+
+.add-transaction-btn:focus-visible {
+  outline: 2px solid var(--blue-light);
+  outline-offset: 3px;
+}

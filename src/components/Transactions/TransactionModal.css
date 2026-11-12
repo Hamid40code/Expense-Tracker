@@ -1,0 +1,473 @@
+
+/* =========================
+   MODAL OVERLAY
+========================= */
+
+.transaction-modal-overlay {
+  position: fixed;
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  box-sizing: border-box;
+
+  background: rgba(0, 10, 34, 0.55);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  animation: modal-overlay-in 0.25s ease;
+}
+
+
+/* =========================
+   MODAL
+========================= */
+
+.transaction-modal {
+  position: relative;
+
+  width: 100%;
+  max-width: 420px;
+
+  max-height: calc(100dvh - 40px);
+
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+  padding: 26px;
+
+  box-sizing: border-box;
+
+  background: #05122f;
+  color: #fefefe;
+
+  border: 1px solid #0b1e48;
+  border-radius: 22px;
+
+  box-shadow:
+    0 25px 80px rgba(0, 0, 0, 0.45),
+    0 0 30px rgba(0, 76, 247, 0.08);
+
+  animation: modal-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+
+/* Scrollbar */
+
+.transaction-modal::-webkit-scrollbar {
+  width: 5px;
+}
+
+.transaction-modal::-webkit-scrollbar-thumb {
+  background: #002270;
+  border-radius: 10px;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.transaction-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 8px;
+}
+
+.transaction-modal-title {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+}
+
+.transaction-modal-header h3 {
+  margin: 0;
+
+  color: #fefefe;
+
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.transaction-modal-header p {
+  margin: 7px 0 0;
+
+  color: #83abd4;
+
+  font-size: 0.75rem;
+}
+
+
+/* Modal icon */
+
+.transaction-modal-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+
+  flex-shrink: 0;
+
+  background: #004cf7;
+  color: #fefefe;
+
+  border-radius: 12px;
+
+  font-size: 1.5rem;
+}
+
+
+/* =========================
+   CLOSE BUTTON
+========================= */
+
+.transaction-modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  flex-shrink: 0;
+
+  background: #0b1e48;
+  color: #83abd4;
+
+  border: 1px solid #0b1e48;
+  border-radius: 10px;
+
+  font-size: 1.4rem;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.transaction-modal-close:hover {
+  background: #002270;
+  color: #fefefe;
+
+  transform: rotate(90deg);
+}
+
+
+/* =========================
+   LABELS
+========================= */
+
+.transaction-modal label {
+  margin-bottom: -7px;
+
+  color: #83abd4;
+
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+
+/* =========================
+   INPUTS
+========================= */
+
+.transaction-modal input,
+.transaction-modal select {
+  width: 100%;
+  min-height: 46px;
+
+  padding: 12px 14px;
+
+  box-sizing: border-box;
+
+  background: #000a22;
+  color: #fefefe;
+
+  border: 1px solid #0b1e48;
+  border-radius: 12px;
+
+  font-size: 0.85rem;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+/* Focus */
+
+.transaction-modal input:focus,
+.transaction-modal select:focus {
+  border-color: #004cf7;
+
+  box-shadow: 0 0 0 3px rgba(0, 76, 247, 0.15);
+}
+
+
+/* Placeholder */
+
+.transaction-modal input::placeholder {
+  color: #83abd4;
+  opacity: 0.65;
+}
+
+
+/* Dropdown */
+
+.transaction-modal select {
+  cursor: pointer;
+}
+
+.transaction-modal select option {
+  background: #000a22;
+  color: #fefefe;
+}
+
+
+/* =========================
+   AMOUNT INPUT
+========================= */
+
+.transaction-amount-input {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  min-height: 46px;
+
+  padding: 0 14px;
+
+  background: #000a22;
+
+  border: 1px solid #0b1e48;
+  border-radius: 12px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.transaction-amount-input:focus-within {
+  border-color: #004cf7;
+
+  box-shadow: 0 0 0 3px rgba(0, 76, 247, 0.15);
+}
+
+.transaction-amount-input > span {
+  color: #83abd4;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.transaction-amount-input input {
+  flex: 1;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+
+  padding: 0;
+
+  background: transparent;
+
+  border: none;
+  border-radius: 0;
+
+  box-shadow: none;
+
+  outline: none;
+}
+
+
+/* Remove number arrows */
+
+.transaction-amount-input input[type="number"]::-webkit-inner-spin-button,
+.transaction-amount-input input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+
+  margin: 0;
+}
+
+.transaction-amount-input input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.transaction-amount-input input:focus {
+  border: none;
+  box-shadow: none;
+}
+
+
+/* =========================
+   FORM BUTTONS
+========================= */
+
+.transaction-form-buttons {
+  display: flex;
+
+  gap: 12px;
+
+  margin-top: 8px;
+}
+
+.transaction-form-buttons button {
+  flex: 1;
+
+  min-height: 46px;
+
+  padding: 12px;
+
+  border: 1px solid transparent;
+  border-radius: 12px;
+
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+/* Cancel */
+
+.cancel-transaction {
+  background: #002270;
+  color: #fefefe;
+}
+
+.cancel-transaction:hover {
+  background: #0b1e48;
+}
+
+
+/* Save */
+
+.save-transaction {
+  background: #004cf7;
+  color: #fefefe;
+}
+
+.save-transaction:hover {
+  background: #047bf7;
+}
+
+
+/* Active */
+
+.transaction-form-buttons button:active {
+  transform: scale(0.97);
+}
+
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes modal-overlay-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 500px) {
+  .transaction-modal-overlay {
+    padding: 14px;
+  }
+
+  .transaction-modal {
+    max-width: 100%;
+
+    max-height: calc(100dvh - 28px);
+
+    padding: 20px;
+
+    border-radius: 18px;
+  }
+
+  .transaction-modal-header h3 {
+    font-size: 1.05rem;
+  }
+
+  .transaction-form-buttons {
+    gap: 8px;
+  }
+}
+
+
+/* =========================
+   ACCESSIBILITY
+========================= */
+
+.transaction-modal-close:focus-visible {
+  outline: 2px solid #83abd4;
+  outline-offset: 3px;
+}
+
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .transaction-modal-overlay,
+  .transaction-modal {
+    animation: none;
+  }
+
+  .transaction-modal-close,
+  .transaction-modal input,
+  .transaction-modal select,
+  .transaction-form-buttons button {
+    transition: none;
+  }
+}
