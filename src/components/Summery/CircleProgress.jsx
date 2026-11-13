@@ -1,87 +1,52 @@
-
 import "./CircleProgress.css";
 
+const CHART_CENTER = 100;
+const CHART_RADIUS = 90;
+const LABEL_RADIUS = 56;
+
+function toRadians(degrees) {
+    return (degrees * Math.PI) / 180;
+}
+
 function CircleProgress({ item, startAngle }) {
+    const percentage = Math.min(100, Math.max(0, Number(item.percentage) || 0));
 
-    const radius = 90;
-    const center = 100;
-
-    const percentage = Math.min(
-        100,
-        Math.max(0, Number(item.percentage) || 0)
-    );
+    if (percentage <= 0) return null;
 
     const angle = (percentage / 100) * 360;
     const endAngle = startAngle + angle;
-
-    const toRadians = (degrees) =>
-        (degrees * Math.PI) / 180;
-
-    const startX =
-        center + radius * Math.cos(toRadians(startAngle));
-
-    const startY =
-        center + radius * Math.sin(toRadians(startAngle));
-
-    const endX =
-        center + radius * Math.cos(toRadians(endAngle));
-
-    const endY =
-        center + radius * Math.sin(toRadians(endAngle));
-
-    const largeArc = angle > 180 ? 1 : 0;
-
+    const startX = CHART_CENTER + CHART_RADIUS * Math.cos(toRadians(startAngle));
+    const startY = CHART_CENTER + CHART_RADIUS * Math.sin(toRadians(startAngle));
+    const endX = CHART_CENTER + CHART_RADIUS * Math.cos(toRadians(endAngle));
+    const endY = CHART_CENTER + CHART_RADIUS * Math.sin(toRadians(endAngle));
+    const labelAngle = startAngle + angle / 2;
+    const labelX = CHART_CENTER + LABEL_RADIUS * Math.cos(toRadians(labelAngle));
+    const labelY = CHART_CENTER + LABEL_RADIUS * Math.sin(toRadians(labelAngle));
     const path = `
-        M ${center} ${center}
+        M ${CHART_CENTER} ${CHART_CENTER}
         L ${startX} ${startY}
-        A ${radius} ${radius} 0 ${largeArc} 1 ${endX} ${endY}
+        A ${CHART_RADIUS} ${CHART_RADIUS} 0 ${angle > 180 ? 1 : 0} 1 ${endX} ${endY}
         Z
     `;
 
-    const labelAngle = startAngle + angle / 2;
-    const labelRadius = 56;
-
-    const labelX =
-        center + labelRadius * Math.cos(toRadians(labelAngle));
-
-    const labelY =
-        center + labelRadius * Math.sin(toRadians(labelAngle));
-
-    // Don't render empty segments
-    if (percentage <= 0) {
-        return null;
-    }
-
     return (
-        <g
-            className="circle-progress"
-            style={{
-                "--segment-color": item.color
-            }}
-        >
-
-            <title>
-                {item.label}: {percentage}%
-            </title>
+        <g className="circle-progress">
+            <title>{item.label}: {percentage}%</title>
 
             {percentage === 100 ? (
-
                 <circle
-                    cx={center}
-                    cy={center}
-                    r={radius}
+                    cx={CHART_CENTER}
+                    cy={CHART_CENTER}
+                    r={CHART_RADIUS}
                     fill={item.color}
                     className="circle-segment"
                 />
-
             ) : (
-
                 <path
                     d={path}
                     fill={item.color}
                     className="circle-segment"
                 />
-
             )}
 
             <text
@@ -94,7 +59,6 @@ function CircleProgress({ item, startAngle }) {
             >
                 {percentage}%
             </text>
-
         </g>
     );
 }

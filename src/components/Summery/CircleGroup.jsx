@@ -1,153 +1,109 @@
-
-import CircleProgress from "./CircleProgress";
+import CircleProgress from "./CircleProgress.jsx";
 import "./CircleGroup.css";
 
-function getCategoryName(item) {
-    return (
-        item.label ||
-        item.category ||
-        item.categoryName ||
-        item.name ||
-        "Other"
-    );
-}
-
-function getCategoryColor(item) {
-    return item.color || "#06B6D4";
-}
-
-function formatMoney(value) {
-    return Number(value || 0).toLocaleString("en-US", {
-        maximumFractionDigits: 2,
-    });
-}
+import { formatCents } from "../../utils/transactions.js";
 
 function CircleGroup({ items = [] }) {
-    let currentAngle = -90;
-
     const hasTransactions = items.length > 0;
-
-    // Calculate total spending from all category amounts.
-    const totalSpending = items.reduce(
-        (total, item) => total + Math.abs(Number(item.amount) || 0),
-        0
+    const totalSpendingCents = items.reduce(
+        (total, item) => total + (item.amountCents !== undefined
+            ? (BigInt(item.amountCents) < 0n ? -BigInt(item.amountCents) : BigInt(item.amountCents))
+            : BigInt(Math.max(0, Math.round(Math.abs(Number(item.amount) || 0) * 100)))),
+        0n
     );
+
+    let currentAngle = -90;
+    const segments = items.map((item) => {
+        const percentage = Math.max(0, Math.min(100, Number(item.percentage) || 0));
+        const segment = {
+            item: { ...item, percentage },
+            startAngle: currentAngle,
+        };
+
+        currentAngle += (percentage / 100) * 360;
+        return segment;
+    });
 
     return (
         <section className="circle-group" aria-label="Spending summary">
-
-            {/* Header */}
             <header className="spending-header">
                 <div className="spending-title">
                     <span className="spending-title-icon" aria-hidden="true">
-                        <span></span>
-                        <span></span>
-                        <span></span>
+                        <span />
+                        <span />
+                        <span />
                     </span>
-
                     <h2>Spending Summary</h2>
                 </div>
             </header>
 
-            {/* Chart and category legend */}
             <div className="spending-content">
-
-                {/* Circular chart */}
                 <div className="circle-chart">
                     <svg
                         viewBox="0 0 200 200"
                         className="circle-chart-svg"
                         role="img"
-                        aria-label={
-                            hasTransactions
-                                ? "Spending breakdown by category"
-                                : "No spending data available"
-                        }
+                        aria-label={hasTransactions
+                            ? "Spending breakdown by category"
+                            : "No spending data available"}
                     >
-                        {!hasTransactions ? (
-                            <circle
-                                cx="100"
-                                cy="100"
-                                r="90"
-                                fill="#172E56"
-                                className="circle-empty"
-                            />
+                        {hasTransactions ? (
+                            segments.map(({ item, startAngle }) => (
+                                <CircleProgress
+                                    key={item.id}
+                                    item={item}
+                                    startAngle={startAngle}
+                                />
+                            ))
                         ) : (
-                            items.map((item) => {
-                                const startAngle = currentAngle;
-                                const percentage = Math.max(
-                                    0,
-                                    Math.min(100, Number(item.percentage) || 0)
-                                );
-
-                                currentAngle += (percentage / 100) * 360;
-
-                                const coloredItem = {
-                                    ...item,
-                                    color: getCategoryColor(item),
-                                };
-
-                                return (
-                                    <CircleProgress
-                                        key={item.id}
-                                        item={coloredItem}
-                                        startAngle={startAngle}
-                                    />
-                                );
-                            })
-                        )}
-
-                        {!hasTransactions && (
-                            <text
-                                x="100"
-                                y="100"
-                                textAnchor="middle"
-                                dominantBaseline="middle"
-                                className="circle-empty-label"
-                            >
-                                0%
-                            </text>
+                            <>
+                                <circle
+                                    cx="100"
+                                    cy="100"
+                                    r="90"
+                                    fill="#172E56"
+                                    className="circle-empty"
+                                />
+                                <text
+                                    x="100"
+                                    y="100"
+                                    textAnchor="middle"
+                                    dominantBaseline="middle"
+                                    className="circle-empty-label"
+                                >
+                                    0%
+                                </text>
+                            </>
                         )}
                     </svg>
                 </div>
 
-                {/* Category legend */}
                 <ul className="circle-legend">
                     {hasTransactions ? (
                         items.map((item) => (
                             <li className="circle-legend-item" key={item.id}>
                                 <span
                                     className="circle-legend-color"
-                                    style={{
-                                        backgroundColor: getCategoryColor(item),
-                                    }}
+                                    style={{ backgroundColor: item.color }}
+                                    aria-hidden="true"
                                 />
-
-                                <span
-                                    className="circle-legend-label"
-                                    title={getCategoryName(item)}
-                                >
-                                    {getCategoryName(item)}
+                                <span className="circle-legend-label" title={item.label}>
+                                    {item.label}
                                 </span>
-
                                 <span className="circle-legend-amount">
-                                    ${formatMoney(item.amount)}
+                                    ${formatCents(item.amountCents ?? Math.round((Number(item.amount) || 0) * 100), { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
                                 </span>
-
                                 <span className="circle-legend-percentage">
                                     {Number(item.percentage || 0)}%
                                 </span>
                             </li>
                         ))
                     ) : (
-                        <li className="circle-empty-message">
-                            No expenses yet
-                        </li>
+                        <li className="circle-empty-message">No expenses yet</li>
                     )}
                 </ul>
             </div>
 
-            {/* Total spending */}
             <footer className="total-spending">
                 <div className="total-spending-icon" aria-hidden="true">
                     <svg viewBox="0 0 32 32" fill="none">
@@ -171,12 +127,9 @@ function CircleGroup({ items = [] }) {
                 </div>
 
                 <div className="total-spending-info">
-                    <span className="total-spending-label">
-                        Total Spending
-                    </span>
-
+                    <span className="total-spending-label">Total Spending</span>
                     <strong className="total-spending-amount">
-                        ${formatMoney(totalSpending)}
+                        ${formatCents(totalSpendingCents, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
                     </strong>
                 </div>
             </footer>

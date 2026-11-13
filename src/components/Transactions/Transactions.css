@@ -1,10 +1,14 @@
+/* =========================
+   ADD TRANSACTION ACTION
+========================= */
+
 .add-transaction-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 9px;
     width: 100%;
-    min-height: 48px;
+    min-height: 46px;
     padding: 10px 14px;
     color: #fff;
     background: linear-gradient(110deg, #087bff, #0648e8);
@@ -25,7 +29,9 @@
     transform: translateY(-1px);
 }
 
-.add-transaction-btn:active { transform: scale(0.98); }
+.add-transaction-btn:active {
+    transform: scale(0.98);
+}
 
 .add-transaction-btn:focus-visible {
     outline: 2px solid #83baff;
@@ -39,9 +45,13 @@
     width: 20px;
     height: 20px;
     font-size: 1.35rem;
-    font-weight: 500;
+    font-weight: 400;
     line-height: 1;
 }
+
+/* =========================
+   TRANSACTIONS PANEL
+========================= */
 
 .transactions-section {
     --text: #f4f7ff;
@@ -49,13 +59,12 @@
     --border: rgba(49, 104, 185, 0.32);
 
     display: flex;
-    flex: 1 1 0;
     flex-direction: column;
     gap: 12px;
     width: 100%;
     min-width: 0;
-    min-height: 0;
-    padding: 18px;
+    min-height: 395px;
+    padding: 14px;
     color: var(--text);
     background:
         radial-gradient(circle at 15% 0%, rgba(0, 91, 255, 0.13), transparent 42%),
@@ -66,7 +75,6 @@
         0 12px 32px rgba(0, 0, 0, 0.28),
         0 0 18px rgba(0, 76, 247, 0.08),
         inset 0 1px 0 rgba(142, 185, 255, 0.06);
-    font-family: var(--font-body);
     letter-spacing: -0.02em;
 }
 
@@ -102,15 +110,15 @@
 .transactions-header h2 {
     margin: 0;
     color: var(--text);
-    font-size: 1rem;
-    font-weight: 700;
+    font-size: 0.86rem;
+    font-weight: 650;
 }
 
 .transactions-header p {
-    display: block;
+    display: none;
     margin: 4px 0 0;
     color: var(--text-muted);
-    font-size: 0.75rem;
+    font-size: 0.68rem;
 }
 
 .transactions-count {
@@ -130,18 +138,23 @@
 
 .transactions-list {
     display: flex;
-    flex: 1 1 0;
+    flex: 1;
     flex-direction: column;
     min-height: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
+    max-height: 440px;
     padding-right: 2px;
-    scrollbar-width: thin;
-    scrollbar-color: #17396f transparent;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
-.transactions-list::-webkit-scrollbar { width: 4px; }
-.transactions-list::-webkit-scrollbar-track { background: transparent; }
+.transactions-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.transactions-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
 .transactions-list::-webkit-scrollbar-thumb {
     background: #17396f;
     border-radius: 10px;
@@ -158,53 +171,115 @@
     text-align: center;
 }
 
-.transactions-empty span { font-size: 1.8rem; }
+.transactions-empty span {
+    font-size: 1.8rem;
+}
 
 .transactions-empty h3 {
     margin: 10px 0 0;
     color: var(--text);
-    font-size: 0.9rem;
+    font-size: 0.86rem;
     font-weight: 600;
 }
 
 .transactions-empty p {
     margin: 5px 0 0;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
 }
 
-@media (max-width: 959px) {
+
+.transactions-load-more {
+    display: block;
+    width: calc(100% - 8px);
+    min-height: 36px;
+    margin: 10px 4px 4px;
+    padding: 8px 12px;
+    color: #a8c9f5;
+    background: rgba(11, 40, 89, 0.55);
+    border: 1px solid rgba(75, 133, 213, 0.28);
+    border-radius: 9px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.transactions-load-more:hover {
+    background: rgba(20, 62, 123, 0.75);
+    border-color: rgba(75, 133, 213, 0.55);
+}
+
+.transactions-load-more:focus-visible {
+    outline: 2px solid #83baff;
+    outline-offset: 2px;
+}
+
+/* Desktop panel sizing */
+
+@media (min-width: 901px) {
     .transactions-section {
-        flex: 0 0 auto;
+        /* Fill the space below the Add Transaction button so this panel
+           matches the combined height of the Summary and Recent Purchases. */
+        flex: 1 1 auto;
         min-height: 0;
-        padding: 14px;
-        gap: 10px;
+        padding: 20px;
+        gap: 16px;
+    }
+
+    .transactions-header h2 {
+        font-size: 1rem;
+    }
+
+    .transactions-header p {
+        display: block;
+        font-size: 0.75rem;
     }
 
     .transactions-list {
-        flex: 0 1 auto;
-        max-height: 330px;
+        max-height: none;
+    }
+
+    .transactions-empty {
         min-height: 0;
     }
 }
 
-@media (max-width: 500px) {
+/* Compact typography for the horizontal mobile card. */
+
+@media (max-width: 760px) {
+    .transactions-section {
+        height: 360px;
+        min-height: 360px;
+        max-height: 360px;
+        gap: 10px;
+    }
+
     .transactions-header {
         gap: 7px;
         padding-bottom: 9px;
     }
 
-    .transactions-title { gap: 7px; }
+    .transactions-title {
+        gap: 7px;
+    }
 
     .transactions-title-icon {
         width: 27px;
         height: 27px;
     }
 
-    .transactions-header h2 { font-size: 0.9rem; }
-    .transactions-header p { font-size: 12px; }
-    .transactions-list { max-height: 320px; }
+    .transactions-header h2 {
+        font-size: 0.78rem;
+    }
+
+    .transactions-list {
+        max-height: 285px;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .add-transaction-btn { transition: none; }
+    .add-transaction-btn,
+    .transactions-load-more {
+        transition: none;
+    }
 }

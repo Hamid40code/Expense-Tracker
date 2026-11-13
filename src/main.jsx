@@ -1,26 +1,21 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+
 import "./index.css";
 import App from "./App.jsx";
+import ErrorBoundary from "./components/shared/ErrorBoundary.jsx";
+import { ERROR_CODES, createAppError } from "./utils/errors.js";
 
-const fontPreconnect = document.createElement("link");
-fontPreconnect.rel = "preconnect";
-fontPreconnect.href = "https://fonts.googleapis.com";
-document.head.appendChild(fontPreconnect);
+const rootElement = document.getElementById("root");
 
-const fontOriginPreconnect = document.createElement("link");
-fontOriginPreconnect.rel = "preconnect";
-fontOriginPreconnect.href = "https://fonts.gstatic.com";
-fontOriginPreconnect.crossOrigin = "anonymous";
-document.head.appendChild(fontOriginPreconnect);
+if (!rootElement) {
+    throw createAppError(ERROR_CODES.APP_ROOT_MISSING);
+}
 
-const fontStylesheet = document.createElement("link");
-fontStylesheet.rel = "stylesheet";
-fontStylesheet.href = "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700&display=swap";
-document.head.appendChild(fontStylesheet);
-
-createRoot(document.getElementById("root")).render(
+createRoot(rootElement).render(
     <StrictMode>
-        <App />
+        <ErrorBoundary>
+            <App />
+        </ErrorBoundary>
     </StrictMode>
 );

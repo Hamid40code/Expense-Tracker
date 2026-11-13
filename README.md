@@ -1,16 +1,55 @@
-# React + Vite
+# Finance Tracker Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple, responsive finance dashboard built with **React** and **CSS**.
 
-Currently, two official plugins are available:
+This is a beginner-level project created for **learning and practice purposes only**. It is an opportunity to explore React, improve coding skills, and understand how to organize a frontend application.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- Add and delete transactions.
+- Track income and expenses.
+- View spending summaries by category.
+- Display recent purchases.
+- Save transactions using browser localStorage.
+- Reusable components and custom React hooks.
+- Responsive dashboard layout.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Technologies
 
-## Expanding the ESLint configuration
+- React
+- JavaScript (ES6+)
+- CSS3
+- Vite
+- Browser localStorage
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Getting Started
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Hamid40code/Expense-Tracker.git
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+## Project Status
+
+**Learning Project — Beginner Level**
+
+This project is built for personal practice and educational purposes only. It is not a professional financial product and should not be used to manage real financial data.
+
+The project may contain limitations, unfinished features, or areas that can be improved.
+
+## License
+
+Created for learning and personal development.

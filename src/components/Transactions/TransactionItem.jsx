@@ -1,22 +1,27 @@
-import { formatMoney } from "../../lib/format.js";
-import { getCategoryDefinition, INCOME_ICON } from "../../lib/categories.js";
+import { memo } from "react";
+
+import { DEFAULT_TRANSACTION_ICON } from "../../constants/transactions.js";
+import { formatCents, formatTransactionTime, getTransactionCents } from "../../utils/transactions.js";
 import "./TransactionItem.css";
 
-export default function TransactionItem({ transaction, onDelete }) {
-    const isIncome = Number(transaction.amount) > 0;
-    const createdAt = transaction.createdAt ? new Date(transaction.createdAt) : null;
-    const transactionTime = createdAt && !Number.isNaN(createdAt.getTime())
-        ? createdAt.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })
-        : null;
+function TransactionItem({ transaction, onDelete }) {
+    const amountCents = getTransactionCents(transaction) ?? 0n;
+    const isIncome = amountCents > 0n;
+    const transactionTime = formatTransactionTime(transaction.createdAt);
+    const transactionName = transaction.name || "Untitled transaction";
 
     return (
-        <div className="transaction-item">
-            <div className={`transaction-icon ${isIncome ? "income-icon" : "expense-icon"}`}>
-                <span>{transaction.icon || (isIncome ? INCOME_ICON : getCategoryDefinition(transaction.category).icon)}</span>
+        <article className="transaction-item">
+            <div
+                className={`transaction-icon ${isIncome ? "income-icon" : "expense-icon"}`}
+                aria-hidden="true"
+            >
+                <span>{transaction.icon || DEFAULT_TRANSACTION_ICON}</span>
             </div>
 
             <div className="transaction-info">
-                <h3>{transaction.name}</h3>
+                <h3>{transactionName}</h3>
+
                 <p>
                     <span>{transaction.date || "Date unavailable"}</span>
                     {transactionTime && (
@@ -29,19 +34,22 @@ export default function TransactionItem({ transaction, onDelete }) {
             </div>
 
             <div className="transaction-right">
-                <span className={`transaction-amount ${isIncome ? "income" : "expense"}`}>
-                    {isIncome ? "+" : "-"}{formatMoney(Math.abs(Number(transaction.amount)))}
+                <span className={isIncome ? "transaction-amount income" : "transaction-amount"}>
+                    {isIncome ? "+" : "-"}${formatCents(amountCents < 0n ? -amountCents : amountCents)}
                 </span>
+
                 <button
                     type="button"
                     className="transaction-delete"
                     onClick={() => onDelete(transaction.id)}
-                    aria-label={`Delete ${transaction.name}`}
+                    aria-label={`Delete ${transactionName}`}
                     title="Delete transaction"
                 >
                     ×
                 </button>
             </div>
-        </div>
+        </article>
     );
 }
+
+export default memo(TransactionItem);

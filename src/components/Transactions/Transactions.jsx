@@ -1,33 +1,24 @@
-import { useCallback, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
+import TransactionListIcon from "../shared/TransactionListIcon.jsx";
 import TransactionItem from "./TransactionItem.jsx";
 import TransactionModal from "./TransactionModal.jsx";
+
 import "./Transactions.css";
 
 export default function Transactions({
-    transactions,
-    setTransactions,
-    onTransactionsChange,
+    transactions = [],
+    onAddTransaction,
+    onDeleteTransaction,
 }) {
+    const safeTransactions = Array.isArray(transactions) ? transactions : [];
     const [showForm, setShowForm] = useState(false);
+    const [visibleCount, setVisibleCount] = useState(100);
     const addButtonRef = useRef(null);
-
-    const closeForm = useCallback(() => setShowForm(false), []);
-
-    function handleAddTransaction(transaction) {
-        const nextTransactions = [transaction, ...transactions];
-        setTransactions(nextTransactions);
-        onTransactionsChange?.(nextTransactions);
-        closeForm();
-    }
-
-    function handleDeleteTransaction(id) {
-        const nextTransactions = transactions.filter(
-            (transaction) => transaction.id !== id
-        );
-        setTransactions(nextTransactions);
-        onTransactionsChange?.(nextTransactions);
-    }
+    const visibleTransactions = useMemo(
+        () => safeTransactions.slice(0, visibleCount),
+        [safeTransactions, visibleCount]
+    );
 
     return (
         <>
@@ -45,43 +36,64 @@ export default function Transactions({
                 <div className="transactions-header">
                     <div className="transactions-title">
                         <div className="transactions-title-icon" aria-hidden="true">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                                <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" strokeWidth="1.8" />
-                                <path d="M7 8H17M7 12H17M7 16H12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                            </svg>
+                            <TransactionListIcon size={22} />
                         </div>
+
                         <div>
                             <h2>Your Transactions</h2>
                             <p>Manage your income and expenses</p>
                         </div>
                     </div>
-                    <span className="transactions-count">{transactions.length}</span>
+
+                    <span className="transactions-count">
+                        {safeTransactions.length}
+                    </span>
                 </div>
 
                 <div className="transactions-list">
-                    {transactions.length === 0 ? (
+                    {safeTransactions.length === 0 ? (
                         <div className="transactions-empty">
-                            <span>💳</span>
+                            <span aria-hidden="true">💳</span>
                             <h3>No transactions yet</h3>
                             <p>Add your first transaction to get started.</p>
                         </div>
                     ) : (
-                        transactions.map((transaction) => (
-                            <TransactionItem
-                                key={transaction.id}
-                                transaction={transaction}
-                                onDelete={handleDeleteTransaction}
-                            />
-                        ))
+                        <>
+                            {visibleTransactions.map((transaction) => (
+                                <TransactionItem
+                                    key={transaction.id}
+                                    transaction={transaction}
+                                    onDelete={onDeleteTransaction}
+                                />
+                            ))}
+                            {visibleCount < safeTransactions.length && (
+                                <button
+                                    type="button"
+                                    className="transactions-load-more"
+                                    onClick={() => setVisibleCount((count) => count + 100)}
+                                >
+                                    Show next 100 ({safeTransactions.length - visibleCount} remaining)
+                                </button>
+                            )}
+                        </>
                     )}
                 </div>
             </section>
 
             {showForm && (
                 <TransactionModal
-                    onClose={closeForm}
-                    onAdd={handleAddTransaction}
-                    returnFocusRef={addButtonRef}
+                    onClose={() => {
+                        setShowForm(false);
+                        addButtonRef.current?.focus();
+                    }}
+                    onAdd={(transaction) => {
+                        const wasAdded = onAddTransaction(transaction);
+                        if (wasAdded !== false) {
+                            setShowForm(false);
+                            return true;
+                        }
+                        return false;
+                    }}
                 />
             )}
         </>
