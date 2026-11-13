@@ -7,7 +7,10 @@ import {
 } from "../../constants/transactions.js";
 import useEscapeKey from "../../hooks/useEscapeKey.js";
 import useModalAccessibility from "../../hooks/useModalAccessibility.js";
-import { createTransactionResult } from "../../utils/transactions.js";
+import {
+    createTransactionResult,
+    isValidAmountDraft,
+} from "../../utils/transactions.js";
 import { ERROR_CODES, getErrorMessage, reportAppError } from "../../utils/errors.js";
 
 import "./TransactionModal.css";
@@ -30,6 +33,12 @@ export default function TransactionModal({ onClose, onAdd }) {
 
     function handleChange(event) {
         const { name, value } = event.target;
+
+        // Amounts accept digits and one decimal point only. Reject invalid
+        // keystrokes and pasted content before it reaches form state.
+        if (name === "amount" && !isValidAmountDraft(value)) {
+            return;
+        }
 
         setFormData((currentData) => ({
             ...currentData,
@@ -177,7 +186,9 @@ export default function TransactionModal({ onClose, onAdd }) {
                         inputMode="decimal"
                         name="amount"
                         placeholder="0.00"
-                        maxLength={32}
+                        autoComplete="off"
+                        maxLength={17}
+                        pattern="[0-9]{1,14}([.][0-9]{0,2})?|[.][0-9]{1,2}"
                         value={formData.amount}
                         onChange={handleChange}
                         aria-invalid={Boolean(errors.amount)}

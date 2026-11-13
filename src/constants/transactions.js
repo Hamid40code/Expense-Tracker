@@ -36,3 +36,8 @@ export function getCategoryIcon(category) {
         ? CATEGORY_ICONS[category]
         : DEFAULT_TRANSACTION_ICON;
 }
+
+export function getCategoryColor(category) {
+    const key = typeof category === "string" ? category.toLowerCase() : "";
+    return Object.hasOwn(CATEGORY_COLORS, key) ? CATEGORY_COLORS[key] : "#06B6D4";
+}

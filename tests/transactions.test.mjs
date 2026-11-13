@@ -7,6 +7,8 @@ import {
     normalizeTransaction,
     normalizeTransactions,
     formatCents,
+    formatSignedCents,
+    isValidAmountDraft,
     formatTransactionTime,
     sortTransactionsNewestFirst,
     isExpense,
@@ -170,6 +172,26 @@ test('category icon lookup does not leak inherited object properties', () => {
     assert.equal(getCategoryIcon('constructor'), '💳');
 });
 
+
+
+test('amount drafts allow numeric input and partial decimals only', () => {
+    for (const value of ['', '.', '0', '12', '12.3', '12.34', '12345678901234.56']) {
+        assert.equal(isValidAmountDraft(value), true, `Expected ${JSON.stringify(value)} to be accepted while typing`);
+    }
+
+    for (const value of ['abc', '-10', '+10', '1e3', '10.999', '123456789012345', ' 10', '10 ']) {
+        assert.equal(isValidAmountDraft(value), false, `Expected ${JSON.stringify(value)} to be rejected while typing`);
+    }
+
+    assert.equal(isValidAmountDraft(12), false);
+});
+
+test('signed balance formatting preserves exact cents and signs', () => {
+    assert.equal(formatSignedCents('12345'), '+$123.45');
+    assert.equal(formatSignedCents('-500'), '−$5.00');
+    assert.equal(formatSignedCents('0'), '+$0.00');
+    assert.equal(formatSignedCents('invalid'), '+$0.00');
+});
 
 test('latest balance trace shows only the newest transaction calculation', () => {
     const transactions = [

@@ -213,18 +213,6 @@
     box-shadow: none;
 }
 
-.transaction-amount-input input[type="number"] {
-    -moz-appearance: textfield;
-    appearance: textfield;
-}
-
-.transaction-amount-input input[type="number"]::-webkit-inner-spin-button,
-.transaction-amount-input input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    appearance: none;
-    margin: 0;
-}
-
 /* Form actions */
 
 .transaction-form-buttons {

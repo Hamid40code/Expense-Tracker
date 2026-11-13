@@ -1,0 +1,449 @@
+/* Spending summary card */
+.spending-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    padding: 13px;
+    color: #f1f5ff;
+    background:
+        radial-gradient(circle at 12% 0%, rgba(0, 91, 255, 0.16), transparent 45%),
+        linear-gradient(145deg, #071630, #06132b 65%, #071a38);
+    border: 1px solid rgba(49, 104, 185, 0.34);
+    border-radius: 17px;
+    box-shadow:
+        0 12px 32px rgba(0, 0, 0, 0.27),
+        0 0 20px rgba(0, 76, 247, 0.08),
+        inset 0 1px 0 rgba(142, 185, 255, 0.06);
+}
+
+.spending-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    min-height: 38px;
+}
+
+.spending-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.spending-title h2 {
+    margin: 0;
+    color: #f1f5ff;
+    font-size: 0.88rem;
+    font-weight: 650;
+    letter-spacing: -0.3px;
+}
+
+.spending-title-icon {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 19px;
+    flex: 0 0 auto;
+}
+
+.spending-title-icon span {
+    display: block;
+    width: 5px;
+    background: #168bff;
+    border-radius: 2px 2px 0 0;
+    box-shadow: 0 0 10px rgba(22, 139, 255, 0.45);
+}
+
+.spending-title-icon span:nth-child(1) { height: 9px; }
+.spending-title-icon span:nth-child(2) { height: 14px; }
+.spending-title-icon span:nth-child(3) { height: 19px; }
+
+/* Latest balance calculation */
+.latest-balance {
+    display: flex;
+    flex: 0 1 auto;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    min-width: 0;
+    max-width: min(58%, 420px);
+    min-height: 36px;
+    padding: 5px 10px;
+    background: linear-gradient(125deg, rgba(8, 32, 70, 0.96), rgba(7, 24, 54, 0.96));
+    border: 1px solid rgba(71, 137, 220, 0.32);
+    border-radius: 9px;
+    box-shadow:
+        inset 0 1px 0 rgba(191, 220, 255, 0.05),
+        0 5px 15px rgba(0, 0, 0, 0.13);
+}
+
+.latest-balance-heading {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #a9c8f2;
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    font-weight: 650;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+}
+
+.latest-balance-indicator {
+    display: inline-grid;
+    width: 15px;
+    height: 15px;
+    flex: 0 0 15px;
+    place-items: center;
+    color: #66d7ff;
+    background: rgba(37, 167, 255, 0.14);
+    border-radius: 5px;
+    font-size: 0.75rem;
+    line-height: 1;
+}
+
+.latest-balance-equation {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 3px;
+    min-width: 0;
+    color: #eaf3ff;
+    font-family: var(--font-number);
+    font-size: clamp(0.62rem, 0.85vw, 0.78rem);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.035em;
+    line-height: 1.3;
+}
+
+.balance-previous { color: #c4d7f4; }
+.balance-operator,
+.balance-equals { color: #65c9ff; }
+.balance-change { color: #64c9ff; }
+
+.balance-result {
+    color: #45e39a;
+    font-size: 1.08em;
+    font-weight: 800;
+    text-shadow: 0 0 12px rgba(69, 227, 154, 0.16);
+}
+
+.balance-result.is-negative {
+    color: #ff8b9a;
+    text-shadow: 0 0 12px rgba(255, 107, 129, 0.15);
+}
+
+.latest-balance-caption,
+.latest-balance-empty {
+    margin: 0;
+    color: #7898c3;
+    font-family: var(--font-body);
+    font-size: 0.55rem;
+    line-height: 1.3;
+}
+
+.latest-balance-empty { color: #9bb4d8; }
+
+.latest-balance-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Chart and legend */
+.spending-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 15px;
+    width: 100%;
+    min-width: 0;
+    padding: 2px 0;
+}
+
+.circle-chart {
+    width: 142px;
+    height: 142px;
+    flex: 0 0 142px;
+}
+
+.circle-chart-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    filter: drop-shadow(0 5px 12px rgba(0, 0, 0, 0.3));
+}
+
+.circle-empty {
+    stroke: rgba(255, 255, 255, 0.12);
+    stroke-width: 1.5;
+}
+
+.circle-empty-label {
+    fill: #c3d7f5;
+    font-family: var(--font-number);
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.circle-legend {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.circle-legend-item {
+    display: grid;
+    grid-template-columns: 11px minmax(55px, 1fr) 49px 32px;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+    font-size: 0.66rem;
+}
+
+.circle-legend-color {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    box-shadow: 0 0 9px rgba(255, 255, 255, 0.12);
+}
+
+.circle-legend-label {
+    min-width: 0;
+    overflow: hidden;
+    color: #e5edff;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.circle-legend-amount,
+.circle-legend-percentage {
+    color: #f1f5ff;
+    font-size: 0.62rem;
+    font-weight: 500;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.circle-legend-percentage { color: #a9c0e6; }
+
+.circle-empty-message {
+    padding: 15px 0;
+    color: #91a8ce;
+    font-size: 0.78rem;
+    text-align: center;
+}
+
+/* Total spending */
+.summary-metrics {
+    display: block;
+    width: 100%;
+    min-width: 0;
+}
+
+.total-spending {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    min-height: 72px;
+    padding: 10px;
+    background: linear-gradient(110deg, #102b59, #142f62);
+    border: 1px solid rgba(83, 145, 230, 0.2);
+    border-radius: 11px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.04),
+        0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.total-spending-icon,
+.total-spending-icon svg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 29px;
+    height: 29px;
+    flex-shrink: 0;
+}
+
+.total-spending-icon svg {
+    filter: drop-shadow(0 0 8px rgba(22, 139, 255, 0.3));
+}
+
+.total-spending-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.total-spending-label {
+    color: #a9c0e6;
+    font-family: var(--font-body);
+    font-size: 0.61rem;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.total-spending-amount {
+    color: #fff;
+    font-family: var(--font-number);
+    font-size: 0.96rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    line-height: 1.3;
+}
+
+/* Large desktop layout */
+@media (min-width: 901px) {
+    .spending-summary {
+        gap: 18px;
+        padding: 22px;
+    }
+
+    .spending-title h2 { font-size: 1.05rem; }
+
+    .spending-content {
+        justify-content: space-evenly;
+        gap: 24px;
+        padding: 8px 0;
+    }
+
+    .circle-chart {
+        width: clamp(170px, 16vw, 220px);
+        height: clamp(170px, 16vw, 220px);
+        flex-basis: clamp(170px, 16vw, 220px);
+    }
+
+    .circle-legend { gap: 14px; }
+
+    .circle-legend-item {
+        grid-template-columns: 13px minmax(70px, 1fr) 66px 42px;
+        gap: 10px;
+        font-size: 0.78rem;
+    }
+
+    .circle-legend-color {
+        width: 13px;
+        height: 13px;
+    }
+
+    .circle-legend-amount,
+    .circle-legend-percentage { font-size: 0.72rem; }
+
+    .total-spending { min-height: 72px; }
+    .total-spending-label { font-size: 0.72rem; }
+    .total-spending-amount { font-size: 1.15rem; }
+}
+
+/* Tablet and horizontal mobile dashboard */
+@media (max-width: 760px) {
+    .spending-summary {
+        justify-content: space-between;
+        height: auto;
+        min-height: 360px;
+        max-height: none;
+        gap: 12px;
+        padding: 14px;
+    }
+
+    .spending-header {
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .latest-balance {
+        max-width: 62%;
+        padding: 5px 7px;
+    }
+
+    .latest-balance-heading { font-size: 0.59rem; }
+
+    .latest-balance-equation {
+        gap: 2px;
+        font-size: clamp(0.52rem, 2.1vw, 0.66rem);
+    }
+
+    .latest-balance-caption,
+    .latest-balance-empty { font-size: 0.5rem; }
+
+    .spending-content {
+        justify-content: space-between;
+        gap: 9px;
+    }
+
+    .circle-chart {
+        width: clamp(96px, 34vw, 118px);
+        height: clamp(96px, 34vw, 118px);
+        flex: 0 0 clamp(96px, 34vw, 118px);
+    }
+
+    .circle-legend { gap: 10px; }
+
+    .circle-legend-item {
+        grid-template-columns: 9px minmax(36px, 1fr) 42px 28px;
+        gap: 4px;
+        font-size: 0.6rem;
+    }
+
+    .circle-legend-color {
+        width: 9px;
+        height: 9px;
+    }
+
+    .circle-legend-label { font-size: 0.59rem; }
+
+    .circle-legend-amount,
+    .circle-legend-percentage { font-size: 0.55rem; }
+
+    .total-spending { min-height: 68px; }
+}
+
+@media (max-width: 480px) {
+    .spending-title h2 { font-size: 0.82rem; }
+}
+
+@media (max-width: 420px) {
+    .spending-summary { padding: 12px; }
+
+    .spending-header {
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .latest-balance {
+        flex: 1 0 100%;
+        max-width: none;
+        min-height: 0;
+        padding: 7px 9px;
+    }
+
+    .latest-balance-equation { font-size: 0.72rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .spending-summary *,
+    .spending-summary *::before,
+    .spending-summary *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}

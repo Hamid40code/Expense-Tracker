@@ -7,7 +7,6 @@ import {
 import { getErrorMessage } from "../utils/errors.js";
 import {
     normalizeTransaction,
-    normalizeTransactions,
     sortTransactionsNewestFirst,
 } from "../utils/transactions.js";
 
@@ -36,9 +35,9 @@ export default function useTransactions() {
         if (!normalizedTransaction) return false;
 
         shouldPersistRef.current = true;
-        setTransactions((currentTransactions) => sortTransactionsNewestFirst(
-            normalizeTransactions([...currentTransactions, normalizedTransaction])
-        ));
+        setTransactions((currentTransactions) =>
+            sortTransactionsNewestFirst([...currentTransactions, normalizedTransaction])
+        );
 
         return true;
     }, []);

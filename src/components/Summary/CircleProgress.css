@@ -1,0 +1,61 @@
+/* =========================
+   CIRCLE PROGRESS
+========================= */
+
+.circle-progress {
+    cursor: default;
+    transform-box: view-box;
+    transform-origin: 100px 100px;
+    animation: circle-appear 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.circle-segment {
+    stroke: rgba(255, 255, 255, 0.16);
+    stroke-width: 1.5;
+    transition: filter 0.25s ease;
+}
+
+.circle-segment:hover {
+    filter: brightness(1.15);
+}
+
+.circle-percentage {
+    fill: #fff;
+    font-family: var(--font-number);
+    font-size: 17px;
+    font-weight: 700;
+    pointer-events: none;
+    opacity: 0;
+    animation: percentage-appear 0.45s ease forwards;
+    animation-delay: 0.35s;
+}
+
+@keyframes circle-appear {
+    from {
+        opacity: 0;
+        transform: scale(0.75);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes percentage-appear {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .circle-progress,
+    .circle-percentage {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+
+    .circle-segment {
+        transition: none;
+    }
+}

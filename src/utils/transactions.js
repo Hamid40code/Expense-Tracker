@@ -8,9 +8,36 @@ import {
 } from "../constants/transactions.js";
 
 const MAX_SAFE_CENTS = BigInt(Number.MAX_SAFE_INTEGER);
+const MAX_TRANSACTION_NAME_LENGTH = 120;
+const MAX_AMOUNT_INTEGER_DIGITS = 14;
+const MAX_AMOUNT_DRAFT_DECIMAL_DIGITS = 2;
+const AMOUNT_DRAFT_PATTERN = new RegExp(
+    `^[0-9]{0,${MAX_AMOUNT_INTEGER_DIGITS}}(?:\\.[0-9]{0,${MAX_AMOUNT_DRAFT_DECIMAL_DIGITS}})?$`
+);
+const INTEGER_FORMATTER = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
+const CONTROL_CHARACTERS = /[\u0000-\u001F\u007F]/g;
 const ALLOWED_CATEGORIES = new Set(
     TRANSACTION_CATEGORIES.map(({ value }) => value)
 );
+
+function normalizeTransactionName(value) {
+    if (typeof value !== "string") return "";
+
+    return value
+        .replace(CONTROL_CHARACTERS, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function parseTimestamp(value) {
+    if (typeof value !== "string" || !value.trim()) return Number.NaN;
+
+    try {
+        return Date.parse(value);
+    } catch {
+        return Number.NaN;
+    }
+}
 
 function createTransactionId() {
     if (typeof globalThis.crypto?.randomUUID === "function") {
@@ -67,7 +94,7 @@ function parseSignedAmount(value) {
 
     // A longer integer part cannot fit into a safe integer number of cents.
     // Check its length before constructing a BigInt to keep hostile input bounded.
-    if (wholeText.length > 14) {
+    if (wholeText.length > MAX_AMOUNT_INTEGER_DIGITS) {
         return { errorCode: ERROR_CODES.TRANSACTION_AMOUNT_TOO_LARGE };
     }
 
@@ -86,6 +113,11 @@ function parseSignedAmount(value) {
 
     const cents = match[1] === "-" ? -absoluteCents : absoluteCents;
     return { cents };
+}
+
+/** Validate an amount while the user is typing (empty and partial decimals are allowed). */
+export function isValidAmountDraft(value) {
+    return typeof value === "string" && AMOUNT_DRAFT_PATTERN.test(value);
 }
 
 function parseAmountInput(value) {
@@ -125,19 +157,10 @@ export function isExpense(transaction) {
 }
 
 export function getTransactionTimestamp(transaction) {
-    const parseDate = (value) => {
-        if (typeof value !== "string" || !value.trim()) return Number.NaN;
-        try {
-            return Date.parse(value);
-        } catch {
-            return Number.NaN;
-        }
-    };
-
-    const createdAt = parseDate(transaction?.createdAt);
+    const createdAt = parseTimestamp(transaction?.createdAt);
     if (Number.isFinite(createdAt)) return createdAt;
 
-    const legacyDate = parseDate(transaction?.date);
+    const legacyDate = parseTimestamp(transaction?.date);
     return Number.isFinite(legacyDate) ? legacyDate : 0;
 }
 
@@ -174,42 +197,57 @@ export function formatTransactionTime(createdAt) {
     }
 }
 
-/** Formats an integer-cent value without converting the full amount to a float. */
+function normalizeFractionDigits(value, fallback) {
+    try {
+        const numericValue = typeof value === "number" ? value : Number(value);
+        if (!Number.isFinite(numericValue)) return fallback;
+        return Math.min(2, Math.max(0, Math.trunc(numericValue)));
+    } catch {
+        return fallback;
+    }
+}
+
+/** Format integer cents without converting the full amount to a floating-point number. */
 export function formatCents(value, options = {}) {
     const cents = parseCents(value, true);
-
     if (cents === null) return "0.00";
 
-    const normalizeDigits = (digitsValue, fallback) => {
-        try {
-            const numericValue = typeof digitsValue === "number" ? digitsValue : Number(digitsValue);
-            if (!Number.isFinite(numericValue)) return fallback;
-            return Math.min(2, Math.max(0, Math.trunc(numericValue)));
-        } catch {
-            return fallback;
-        }
-    };
-    const maxDigits = normalizeDigits(options?.maximumFractionDigits ?? 2, 2);
-    const minDigits = Math.min(maxDigits, normalizeDigits(options?.minimumFractionDigits ?? 2, 2));
-    const precisionFactor = 10n ** BigInt(2 - maxDigits);
+    const maximumFractionDigits = normalizeFractionDigits(options?.maximumFractionDigits ?? 2, 2);
+    const minimumFractionDigits = Math.min(
+        maximumFractionDigits,
+        normalizeFractionDigits(options?.minimumFractionDigits ?? 2, 2)
+    );
+    const precisionFactor = 10n ** BigInt(2 - maximumFractionDigits);
     const absoluteCents = cents < 0n ? -cents : cents;
-    const roundedCents = maxDigits === 2
+    const roundedCents = maximumFractionDigits === 2
         ? absoluteCents
         : ((absoluteCents + precisionFactor / 2n) / precisionFactor) * precisionFactor;
 
     const whole = roundedCents / 100n;
-    let fraction = (roundedCents % 100n).toString().padStart(2, "0").slice(0, maxDigits);
+    let fraction = (roundedCents % 100n)
+        .toString()
+        .padStart(2, "0")
+        .slice(0, maximumFractionDigits);
 
-    while (fraction.length > minDigits && fraction.endsWith("0")) {
+    while (fraction.length > minimumFractionDigits && fraction.endsWith("0")) {
         fraction = fraction.slice(0, -1);
     }
 
-    const formattedWhole = new Intl.NumberFormat("en-US", {
-        maximumFractionDigits: 0,
-    }).format(whole);
+    const formattedWhole = INTEGER_FORMATTER.format(whole);
     const sign = cents < 0n && roundedCents !== 0n ? "-" : "";
 
     return `${sign}${formattedWhole}${fraction ? `.${fraction}` : ""}`;
+}
+
+/** Format a signed integer-cent balance with an explicit sign and currency symbol. */
+export function formatSignedCents(value) {
+    const cents = parseCents(value, true);
+    if (cents === null) return "+$0.00";
+
+    const sign = cents < 0n ? "−" : "+";
+    const absoluteCents = cents < 0n ? -cents : cents;
+
+    return `${sign}$${formatCents(absoluteCents)}`;
 }
 
 function normalizeDate(createdAtValue, displayDateValue) {
@@ -245,9 +283,7 @@ export function normalizeTransaction(transaction) {
         return null;
     }
 
-    const name = typeof transaction.name === "string"
-        ? transaction.name.replace(/[\u0000-\u001F\u007F]/g, " ").replace(/\s+/g, " ").trim().slice(0, 120)
-        : "";
+    const name = normalizeTransactionName(transaction.name).slice(0, MAX_TRANSACTION_NAME_LENGTH);
     const cents = getTransactionCents(transaction);
 
     if (!name || cents === null || cents === 0n) {
@@ -317,12 +353,11 @@ export function validateTransactionForm(formData) {
         return { valid: false, errors: { form: ERROR_CODES.FORM_INVALID } };
     }
 
-    const rawName = typeof formData.name === "string" ? formData.name : "";
-    const name = rawName.replace(/[\u0000-\u001F\u007F]/g, " ").replace(/\s+/g, " ").trim();
+    const name = normalizeTransactionName(formData.name);
 
     if (!name) {
         errors.name = ERROR_CODES.TRANSACTION_NAME_REQUIRED;
-    } else if (name.length > 120) {
+    } else if (name.length > MAX_TRANSACTION_NAME_LENGTH) {
         errors.name = ERROR_CODES.TRANSACTION_NAME_TOO_LONG;
     }
 
@@ -357,7 +392,7 @@ export function createTransactionResult(formData, now = new Date()) {
         };
     }
 
-    const name = formData.name.replace(/[\u0000-\u001F\u007F]/g, " ").replace(/\s+/g, " ").trim();
+    const name = normalizeTransactionName(formData.name);
     const amountCents = amountToCents(formData.amount);
 
     // This guard protects the constructor if amount parsing rules change later.

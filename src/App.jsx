@@ -1,11 +1,14 @@
 import { useMemo } from "react";
 
-import Transactions from "./components/Transactions/Transactions.jsx";
 import RecentPurchases from "./components/RecentPurchases/RecentPurchases.jsx";
-import CircleGroup from "./components/Summery/CircleGroup.jsx";
-import { CATEGORY_COLORS } from "./constants/transactions.js";
+import SpendingSummary from "./components/Summary/SpendingSummary.jsx";
+import Transactions from "./components/Transactions/Transactions.jsx";
+import { getCategoryColor } from "./constants/transactions.js";
 import useTransactions from "./hooks/useTransactions.js";
-import { getLatestTransactionBalanceTrace, getTransactionStats } from "./utils/transactionStats.js";
+import {
+    getLatestTransactionBalanceTrace,
+    getTransactionStats,
+} from "./utils/transactionStats.js";
 
 function App() {
     const {
@@ -15,7 +18,7 @@ function App() {
         storageError,
     } = useTransactions();
 
-    const stats = useMemo(
+    const transactionStats = useMemo(
         () => getTransactionStats(transactions),
         [transactions]
     );
@@ -25,18 +28,15 @@ function App() {
         [transactions]
     );
 
-    const circleData = useMemo(
-        () => stats.categoryStats.map((stat) => ({
-            id: stat.category,
-            label: stat.category,
-            amount: stat.amount,
-            amountCents: stat.amountCents,
-            percentage: stat.percentage,
-            color: Object.hasOwn(CATEGORY_COLORS, stat.category.toLowerCase())
-                ? CATEGORY_COLORS[stat.category.toLowerCase()]
-                : "#06B6D4",
+    const categoryChartItems = useMemo(
+        () => transactionStats.categoryStats.map((category) => ({
+            id: category.category,
+            label: category.category,
+            amountCents: category.amountCents,
+            percentage: category.percentage,
+            color: getCategoryColor(category.category),
         })),
-        [stats.categoryStats]
+        [transactionStats.categoryStats]
     );
 
     return (
@@ -50,7 +50,11 @@ function App() {
 
             <div className="dashboard-grid">
                 <div className="dashboard-main-column">
-                    <CircleGroup items={circleData} latestBalanceTrace={latestBalanceTrace} />
+                    <SpendingSummary
+                        items={categoryChartItems}
+                        totalSpendingCents={transactionStats.totalExpensesCents}
+                        latestBalanceTrace={latestBalanceTrace}
+                    />
                     <RecentPurchases transactions={transactions} />
                 </div>
 

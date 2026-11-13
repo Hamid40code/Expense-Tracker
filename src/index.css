@@ -181,7 +181,7 @@ h6 {
 
     /* Keep the mobile cards on the same deep-navy palette as the desktop dashboard. */
     .transactions-section,
-    .circle-group,
+    .spending-summary,
     .recent-purchases {
         color: #f4f7ff;
         background:
@@ -236,7 +236,7 @@ h6 {
         display: contents;
     }
 
-    .circle-group,
+    .spending-summary,
     .recent-purchases,
     .add-transaction-btn,
     .transactions-section {
