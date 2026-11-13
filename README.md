@@ -22,6 +22,10 @@ This is a beginner-level project created for **learning and practice purposes on
 - Vite
 - Browser localStorage
 
+## Live Version URL
+
+https://hamid40code.github.io/Expense-Tracker/
+
 ## Getting Started
 
 Clone the repository:

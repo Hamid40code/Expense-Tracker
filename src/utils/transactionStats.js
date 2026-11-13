@@ -1,6 +1,35 @@
 import { DEFAULT_CATEGORY } from "../constants/transactions.js";
 import { getTransactionCents } from "./transactions.js";
 
+
+/**
+ * Build the latest-only balance calculation for a newest-first transaction list.
+ * The returned values are strings so callers can keep exact integer-cent precision.
+ */
+export function getLatestTransactionBalanceTrace(transactions = []) {
+    if (!Array.isArray(transactions) || transactions.length === 0) return null;
+
+    const latestTransaction = transactions.find((transaction) =>
+        getTransactionCents(transaction) !== null
+    );
+    if (!latestTransaction) return null;
+
+    const latestAmountCents = getTransactionCents(latestTransaction);
+    let currentBalanceCents = 0n;
+
+    for (const transaction of transactions) {
+        const amountCents = getTransactionCents(transaction);
+        if (amountCents !== null) currentBalanceCents += amountCents;
+    }
+
+    return {
+        transactionId: latestTransaction.id,
+        previousBalanceCents: (currentBalanceCents - latestAmountCents).toString(),
+        transactionAmountCents: latestAmountCents.toString(),
+        currentBalanceCents: currentBalanceCents.toString(),
+    };
+}
+
 export function getTransactionStats(transactions = []) {
     if (!Array.isArray(transactions)) {
         return {

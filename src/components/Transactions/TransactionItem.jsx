@@ -34,9 +34,11 @@ function TransactionItem({ transaction, onDelete }) {
             </div>
 
             <div className="transaction-right">
-                <span className={isIncome ? "transaction-amount income" : "transaction-amount"}>
-                    {isIncome ? "+" : "-"}${formatCents(amountCents < 0n ? -amountCents : amountCents)}
-                </span>
+                <div className="transaction-financials">
+                    <span className={isIncome ? "transaction-amount income" : "transaction-amount"}>
+                        {isIncome ? "+" : "-"}${formatCents(amountCents < 0n ? -amountCents : amountCents)}
+                    </span>
+                </div>
 
                 <button
                     type="button"

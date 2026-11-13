@@ -5,7 +5,7 @@ import RecentPurchases from "./components/RecentPurchases/RecentPurchases.jsx";
 import CircleGroup from "./components/Summery/CircleGroup.jsx";
 import { CATEGORY_COLORS } from "./constants/transactions.js";
 import useTransactions from "./hooks/useTransactions.js";
-import { getTransactionStats } from "./utils/transactionStats.js";
+import { getLatestTransactionBalanceTrace, getTransactionStats } from "./utils/transactionStats.js";
 
 function App() {
     const {
@@ -17,6 +17,11 @@ function App() {
 
     const stats = useMemo(
         () => getTransactionStats(transactions),
+        [transactions]
+    );
+
+    const latestBalanceTrace = useMemo(
+        () => getLatestTransactionBalanceTrace(transactions),
         [transactions]
     );
 
@@ -45,7 +50,7 @@ function App() {
 
             <div className="dashboard-grid">
                 <div className="dashboard-main-column">
-                    <CircleGroup items={circleData} />
+                    <CircleGroup items={circleData} latestBalanceTrace={latestBalanceTrace} />
                     <RecentPurchases transactions={transactions} />
                 </div>
 

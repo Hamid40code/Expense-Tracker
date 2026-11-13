@@ -7,10 +7,12 @@
     --font-body: "Inter", sans-serif;
     --font-number: "IBM Plex Mono", monospace;
 
+    --page-background: #020817;
+
     color-scheme: dark;
     font-family: var(--font-body);
     color: #f4f7ff;
-    background: #020817;
+    background-color: var(--page-background);
 }
 
 * {
@@ -20,12 +22,14 @@
 html {
     min-width: 320px;
     min-height: 100%;
-    background: #020817;
+    background-color: var(--page-background);
+    color-scheme: dark;
 }
 
 body {
     min-width: 320px;
     min-height: 100vh;
+    min-height: 100svh;
     margin: 0;
     font-family: var(--font-body);
     font-size: 16px;
@@ -36,8 +40,16 @@ body {
         radial-gradient(ellipse at 12% 0%, rgba(0, 76, 247, 0.12), transparent 38%),
         radial-gradient(ellipse at 100% 90%, rgba(0, 119, 255, 0.08), transparent 35%),
         #020817;
+    background-color: var(--page-background);
+    background-attachment: fixed;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+    min-height: 100vh;
+    min-height: 100svh;
+    background-color: var(--page-background);
 }
 
 button,
@@ -154,6 +166,34 @@ h6 {
 ========================= */
 
 @media (max-width: 760px) {
+    html,
+    body,
+    #root {
+        min-height: 100%;
+        background-color: var(--page-background);
+    }
+
+    body {
+        min-height: 100vh;
+        min-height: 100svh;
+        overscroll-behavior-y: none;
+    }
+
+    /* Keep the mobile cards on the same deep-navy palette as the desktop dashboard. */
+    .transactions-section,
+    .circle-group,
+    .recent-purchases {
+        color: #f4f7ff;
+        background:
+            radial-gradient(circle at 14% 0%, rgba(0, 76, 247, 0.14), transparent 44%),
+            linear-gradient(145deg, #050b25 0%, #03091f 62%, #06132d 100%);
+        border-color: rgba(65, 112, 190, 0.48);
+        box-shadow:
+            0 10px 26px rgba(0, 0, 0, 0.30),
+            0 0 18px rgba(0, 76, 247, 0.07),
+            inset 0 1px 0 rgba(142, 185, 255, 0.07);
+    }
+
     .app-shell {
         display: block;
         width: calc(100% - 20px);

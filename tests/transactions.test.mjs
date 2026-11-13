@@ -13,7 +13,7 @@ import {
     validateTransactionForm,
 } from '../src/utils/transactions.js';
 import { ERROR_CODES, getErrorMessage } from '../src/utils/errors.js';
-import { getTransactionStats } from '../src/utils/transactionStats.js';
+import { getLatestTransactionBalanceTrace, getTransactionStats } from '../src/utils/transactionStats.js';
 import { getCategoryIcon } from '../src/constants/transactions.js';
 
 const now = new Date('2026-11-12T09:00:00.000Z');
@@ -168,4 +168,70 @@ test('defensive helpers handle non-array input and hostile date types', () => {
 test('category icon lookup does not leak inherited object properties', () => {
     assert.equal(getCategoryIcon('__proto__'), '💳');
     assert.equal(getCategoryIcon('constructor'), '💳');
+});
+
+
+test('latest balance trace shows only the newest transaction calculation', () => {
+    const transactions = [
+        { id: 'newest', amountCents: '2000' },
+        { id: 'expense', amountCents: '-5000' },
+        { id: 'opening', amountCents: '10000' },
+    ];
+
+    assert.deepEqual(getLatestTransactionBalanceTrace(transactions), {
+        transactionId: 'newest',
+        previousBalanceCents: '5000',
+        transactionAmountCents: '2000',
+        currentBalanceCents: '7000',
+    });
+});
+
+test('latest balance trace handles a newest expense and negative balances exactly', () => {
+    const transactions = [
+        { id: 'latest-expense', amountCents: '-1500' },
+        { id: 'older-expense', amountCents: '-2500' },
+        { id: 'income', amountCents: '3000' },
+    ];
+
+    assert.deepEqual(getLatestTransactionBalanceTrace(transactions), {
+        transactionId: 'latest-expense',
+        previousBalanceCents: '500',
+        transactionAmountCents: '-1500',
+        currentBalanceCents: '-1000',
+    });
+});
+
+test('latest balance trace safely handles empty or invalid transaction lists', () => {
+    assert.equal(getLatestTransactionBalanceTrace([]), null);
+    assert.equal(getLatestTransactionBalanceTrace(null), null);
+    assert.equal(getLatestTransactionBalanceTrace([{ id: 'invalid', amountCents: 'bad' }]), null);
+});
+
+
+test('latest balance trace recalculates after deleting the newest transaction', () => {
+    const transactions = [
+        { id: 'newest', amountCents: '-1000' },
+        { id: 'older', amountCents: '6000' },
+    ];
+
+    const afterDelete = getLatestTransactionBalanceTrace(transactions.slice(1));
+    assert.deepEqual(afterDelete, {
+        transactionId: 'older',
+        previousBalanceCents: '0',
+        transactionAmountCents: '6000',
+        currentBalanceCents: '6000',
+    });
+});
+
+test('latest balance trace handles a large transaction history with exact cents', () => {
+    const transactions = Array.from({ length: 50000 }, (_, index) => ({
+        id: `transaction-${index}`,
+        amountCents: index === 0 ? '-1' : '1',
+    }));
+
+    const trace = getLatestTransactionBalanceTrace(transactions);
+    assert.equal(trace.transactionId, 'transaction-0');
+    assert.equal(trace.previousBalanceCents, '49999');
+    assert.equal(trace.transactionAmountCents, '-1');
+    assert.equal(trace.currentBalanceCents, '49998');
 });

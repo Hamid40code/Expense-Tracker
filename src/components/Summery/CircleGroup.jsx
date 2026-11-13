@@ -3,7 +3,13 @@ import "./CircleGroup.css";
 
 import { formatCents } from "../../utils/transactions.js";
 
-function CircleGroup({ items = [] }) {
+function formatSignedCents(value) {
+    const cents = BigInt(value);
+    const absolute = cents < 0n ? -cents : cents;
+    return `${cents < 0n ? "−" : "+"}$${formatCents(absolute)}`;
+}
+
+function CircleGroup({ items = [], latestBalanceTrace = null }) {
     const hasTransactions = items.length > 0;
     const totalSpendingCents = items.reduce(
         (total, item) => total + (item.amountCents !== undefined
@@ -104,8 +110,9 @@ function CircleGroup({ items = [] }) {
                 </ul>
             </div>
 
-            <footer className="total-spending">
-                <div className="total-spending-icon" aria-hidden="true">
+            <footer className="summary-metrics">
+                <div className="total-spending">
+                    <div className="total-spending-icon" aria-hidden="true">
                     <svg viewBox="0 0 32 32" fill="none">
                         <path
                             d="M5 9.5L22 5V9H25.5C27.4 9 29 10.6 29 12.5V25C29 26.7 27.7 28 26 28H7C5.3 28 4 26.7 4 25V12.5C4 11.2 4.4 10.2 5 9.5Z"
@@ -126,12 +133,40 @@ function CircleGroup({ items = [] }) {
                     </svg>
                 </div>
 
-                <div className="total-spending-info">
-                    <span className="total-spending-label">Total Spending</span>
-                    <strong className="total-spending-amount">
-                        ${formatCents(totalSpendingCents, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
-                    </strong>
+                    <div className="total-spending-info">
+                        <span className="total-spending-label">Total Spending</span>
+                        <strong className="total-spending-amount">
+                            ${formatCents(totalSpendingCents, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                        </strong>
+                    </div>
                 </div>
+
+                <section className={`latest-balance${latestBalanceTrace ? " has-balance" : " is-empty"}`}
+                    aria-label="Latest balance calculation">
+                    <div className="latest-balance-heading">
+                        <span className="latest-balance-indicator" aria-hidden="true">↗</span>
+                        <span>Latest Balance</span>
+                    </div>
+                    {latestBalanceTrace ? (
+                        <div className="latest-balance-equation" aria-live="polite">
+                            <span className="latest-balance-sr-only">
+                                Previous balance {formatSignedCents(latestBalanceTrace.previousBalanceCents)}, transaction {BigInt(latestBalanceTrace.transactionAmountCents) < 0n ? "minus" : "plus"} ${formatCents(BigInt(latestBalanceTrace.transactionAmountCents) < 0n ? -BigInt(latestBalanceTrace.transactionAmountCents) : BigInt(latestBalanceTrace.transactionAmountCents))}, resulting balance {formatSignedCents(latestBalanceTrace.currentBalanceCents)}.
+                            </span>
+                            <span aria-hidden="true" className="balance-previous">{formatSignedCents(latestBalanceTrace.previousBalanceCents)}</span>
+                            <span aria-hidden="true" className="balance-operator">{BigInt(latestBalanceTrace.transactionAmountCents) < 0n ? "−" : "+"}</span>
+                            <span aria-hidden="true" className="balance-change">${formatCents(BigInt(latestBalanceTrace.transactionAmountCents) < 0n ? -BigInt(latestBalanceTrace.transactionAmountCents) : BigInt(latestBalanceTrace.transactionAmountCents))}</span>
+                            <span aria-hidden="true" className="balance-equals">=</span>
+                            <strong aria-hidden="true" className={BigInt(latestBalanceTrace.currentBalanceCents) < 0n ? "balance-result is-negative" : "balance-result"}>
+                                {formatSignedCents(latestBalanceTrace.currentBalanceCents)}
+                            </strong>
+                        </div>
+                    ) : (
+                        <p className="latest-balance-empty">Add a transaction to see your balance</p>
+                    )}
+                    {latestBalanceTrace && (
+                        <span className="latest-balance-caption">After your newest transaction</span>
+                    )}
+                </section>
             </footer>
         </section>
     );
